@@ -3,414 +3,588 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SafeHome — Maquettes</title>
+  <title>SafeHome — Maquette (SPA)</title>
   <style>
+    /* ---------- THEME / VARIABLES ---------- */
     :root{
-      --bg:#f6f7f9; /* very light grey */
-      --card:#ffffff;
-      --muted:#6b7280;
-      --primary:#0f9d58; /* green primary — change to blue if you prefer */
-      --accent:#0b76d1;
-      --shadow: 0 6px 18px rgba(15,23,42,0.06);
-      --glass: rgba(255,255,255,0.6);
-      --radius:12px;
+      --bg: #e9f0f6;                /* page background (soft blue) */
+      --panel: #ffffff;             /* cards background */
+      --muted: #6b7280;             /* grey text */
+      --surface: #f3f7fb;
+      --primary: #1976d2;           /* main blue */
+      --primary-600: #0f62c9;
+      --accent: #0b9d58;            /* green accent if needed */
+      --shadow-1: 0 10px 30px rgba(13,38,59,0.08);
+      --shadow-2: 0 6px 18px rgba(15,23,42,0.06);
+      --radius-lg: 12px;
+      --radius-md: 10px;
+      --gap: 18px;
+      --max-width: 1180px;
+      --font-sans: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial;
     }
+
+    /* ---------- RESET & BASE ---------- */
     *{box-sizing:border-box}
-    body{font-family:Inter, system-ui, Arial, sans-serif;margin:0;background:var(--bg);color:#111}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font-sans);
+      background: linear-gradient(180deg, #e9f3fa 0%, var(--bg) 100%);
+      color:#0f1724;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:40px;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
 
-    /* common layout */
-    .app{min-height:100vh;display:flex}
+    /* ---------- APP WRAPPER ---------- */
+    .wrap{
+      max-width:var(--max-width);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 240px 1fr;
+      gap:var(--gap);
+      align-items:start;
+    }
 
-    /* Sidebar */
-    .sidebar{width:250px;background:linear-gradient(180deg, #fff, #fbfdff);border-right:1px solid #e6e9ef;padding:20px;display:flex;flex-direction:column;gap:18px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:42px;height:42px;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
-    .brand h1{font-size:16px;margin:0}
-    .nav{flex:1;display:flex;flex-direction:column;gap:6px}
-    .nav a{display:flex;gap:12px;align-items:center;padding:10px;border-radius:10px;color:#24303a;text-decoration:none}
-    .nav a .ico{width:28px;height:28px;border-radius:8px;display:inline-grid;place-items:center;background:#f1f5f9}
-    .nav a.active{background:linear-gradient(90deg, rgba(11,118,209,0.08), rgba(15,157,88,0.03));box-shadow:var(--shadow)}
-    .logout{margin-top:auto}
-    .logout button{width:100%;padding:10px;border-radius:10px;border:0;background:#fff;box-shadow:var(--shadow);cursor:pointer}
+    /* ---------- SIDEBAR ---------- */
+    .sidebar{
+      background:var(--panel);
+      border-radius:var(--radius-lg);
+      padding:22px;
+      box-shadow:var(--shadow-1);
+      height:calc(100vh - 80px);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+    .brand .logo{
+      width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#58a2ff);display:grid;place-items:center;color:white;font-weight:700;font-size:16px;box-shadow:0 6px 18px rgba(25,118,210,0.14)
+    }
+    .brand h1{font-size:14px;margin:0}
+    .menu{flex:1;display:flex;flex-direction:column;gap:6px;padding-top:6px}
+    .menu a{
+      display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:#294150;
+      transition:all .18s;
+    }
+    .menu a .ico{width:34px;height:34;border-radius:8px;background:var(--surface);display:grid;place-items:center;color:var(--muted)}
+    .menu a:hover{background:linear-gradient(90deg, rgba(25,118,210,0.04), rgba(11,157,88,0.02))}
+    .menu a.active{background:linear-gradient(90deg, rgba(25,118,210,0.07), rgba(11,157,88,0.02));box-shadow:var(--shadow-2)}
+    .sidebar .logout{margin-top:auto}
+    .sidebar .logout button{background:transparent;border:0;color:var(--primary);padding:10px;border-radius:8px;cursor:pointer}
 
-    /* Main area */
-    .main{flex:1;display:flex;flex-direction:column}
-    header.top{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid #eef2f6;background:transparent}
-    .page-title{font-size:18px;font-weight:600;color:#0f1724}
+    /* ---------- MAIN AREA ---------- */
+    .main{
+      display:flex;
+      flex-direction:column;
+      gap:var(--gap);
+    }
+    header.top{
+      display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-radius:var(--radius-lg);
+      background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.98));
+      box-shadow:var(--shadow-2);
+      border:1px solid rgba(20,44,80,0.02);
+    }
+    .page-title{font-size:18px;font-weight:700}
     .top-right{display:flex;align-items:center;gap:12px}
-    .profile{display:flex;align-items:center;gap:10px}
-    .avatar{width:40px;height:40px;border-radius:50%;background:#e6eef6;display:grid;place-items:center;color:var(--primary);font-weight:700}
+    .userbox{display:flex;align-items:center;gap:12px}
+    .avatar{width:40px;height:40px;border-radius:50%;background:#f6fbff;border:2px solid rgba(25,118,210,0.12);display:grid;place-items:center;font-weight:700;color:var(--primary)}
     .dropdown{position:relative}
-    .dropdown-menu{position:absolute;right:0;top:52px;background:var(--card);box-shadow:var(--shadow);padding:8px;border-radius:8px;min-width:160px;display:none}
-    .dropdown-menu a{display:block;padding:10px;color:#223; text-decoration:none;border-radius:6px}
+    .dropdown-menu{position:absolute;right:0;top:56px;background:var(--panel);box-shadow:var(--shadow-2);padding:8px;border-radius:10px;min-width:180px;display:none}
     .dropdown.open .dropdown-menu{display:block}
+    .dropdown-menu a{display:block;padding:8px;border-radius:8px;color:#21343e}
 
-    /* Content padding */
-    .content{padding:22px}
+    /* ---------- GRID & CARDS ---------- */
+    .content{
+      display:grid;
+      gap:var(--gap);
+      grid-template-columns: 1fr;
+    }
+    .card{
+      background:var(--panel);
+      border-radius:var(--radius-md);
+      padding:18px;
+      box-shadow:var(--shadow-2);
+      border:1px solid rgba(15,23,42,0.03);
+    }
 
-    /* Cards */
-    .grid{display:grid;gap:16px}
-    .cards-4{grid-template-columns:repeat(4,1fr)}
-    .cards-2{grid-template-columns:repeat(2,1fr)}
-    .card{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)}
+    /* dashboard top area */
+    .dash-hero{display:flex;gap:18px;align-items:center;justify-content:space-between}
+    .hero-left{flex:1}
+    .welcome{font-size:20px;font-weight:700;margin:0}
+    .subtitle{color:var(--muted);margin-top:6px;margin-bottom:12px}
+    .login-form{max-width:480px}
+    .field{display:flex;flex-direction:column;margin-bottom:10px}
+    .field label{font-size:13px;color:var(--muted);margin-bottom:8px}
+    input[type=text], input[type=password], select{
+      padding:12px;border-radius:8px;border:1px solid #e6eef6;background:linear-gradient(180deg,#fff,#fbfdff);font-size:14px
+    }
+    .btn{padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
+    .btn-primary{background:var(--primary);color:white;box-shadow:0 6px 18px rgba(25,118,210,0.12)}
+    .link-small{font-size:13px;color:var(--muted);display:inline-block;margin-top:8px}
 
-    .summary .value{font-size:20px;font-weight:700}
-    .summary .label{font-size:13px;color:var(--muted)}
+    /* summary cards */
+    .cards-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+    .summary-card{padding:14px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+    .small-num{font-size:20px;font-weight:800;color:var(--primary-600)}
 
-    /* Buttons */
-    .btn{padding:10px 14px;border-radius:9px;border:0;cursor:pointer}
-    .btn-primary{background:var(--primary);color:#fff}
-    .btn-ghost{background:transparent;border:1px solid #e6e9ef}
-    .btn-danger{background:#ef4444;color:#fff}
+    /* camera card */
+    .camera-wrap{display:grid;grid-template-columns:1fr 300px;gap:12px}
+    .camera{height:220px;border-radius:10px;background:linear-gradient(180deg,#000,#122);color:#fff;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .camera .tag{position:absolute;left:12px;top:12px;background:rgba(0,0,0,0.34);padding:6px 8px;border-radius:8px;font-size:13px}
+    .camera .status{position:absolute;right:12px;top:12px;padding:6px 10px;border-radius:8px;font-weight:600;background:rgba(255,255,255,0.06)}
+    .camera .status.green{color:#00c853;background:rgba(0,200,83,0.08)}
+    .camera .status.red{color:#ff3b30;background:rgba(255,59,48,0.08)}
 
-    /* Surveillance page */
-    .camera{background:#000;height:320px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;position:relative}
-    .camera .tag{position:absolute;left:12px;top:12px;background:rgba(0,0,0,0.36);padding:6px 8px;border-radius:8px;font-size:13px}
-    .camera .status{position:absolute;right:12px;top:12px;padding:6px 10px;border-radius:8px;font-weight:600}
-    .status.green{background:rgba(16,185,129,0.12);color:var(--primary)}
-    .status.red{background:rgba(239,68,68,0.12);color:#ef4444}
+    /* right small panel */
+    .alerts-list{display:flex;flex-direction:column;gap:8px}
+    .alert-item{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:8px;background:#fff;border:1px solid rgba(15,23,42,0.03)}
 
-    /* Device card */
-    .device{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:10px;border:1px solid #eef2f6}
-    .switch{width:48px;height:28px;border-radius:20px;background:#d1d5db;position:relative;cursor:pointer}
-    .switch .knob{width:22px;height:22px;border-radius:50%;background:#fff;position:absolute;top:3px;left:3px;transition:all .22s}
-    .switch.on{background:linear-gradient(90deg,var(--primary),var(--accent))}
+    /* control page devices */
+    .devices-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .device{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:8px;border:1px solid rgba(15,23,42,0.03);background:linear-gradient(180deg,#fff,#fbfdff)}
+    .device .meta{display:flex;flex-direction:column}
+    .device .meta .name{font-weight:700}
+    .device .meta .small{color:var(--muted);font-size:13px}
+    .switch{width:46px;height:26px;border-radius:20px;background:#e6eef6;position:relative;cursor:pointer;border:1px solid rgba(15,23,42,0.04)}
+    .switch .knob{width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:3px;left:3px;transition:all .18s;box-shadow:0 4px 10px rgba(15,23,42,0.07)}
+    .switch.on{background:linear-gradient(90deg,var(--primary),#58a2ff)}
     .switch.on .knob{left:23px}
 
-    /* Modes */
-    .modes{display:flex;gap:16px}
-    .mode-card{flex:1;padding:18px;border-radius:12px;border:1px solid #eef2f6;display:flex;flex-direction:column;gap:12px;align-items:flex-start}
+    /* modes */
+    .modes-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .mode-card{padding:20px;border-radius:10px;display:flex;flex-direction:column;gap:12px;min-height:140px}
+    .badge{display:inline-block;padding:6px 10px;border-radius:20px;background:#f1f5f9;color:var(--muted);font-weight:600}
 
-    /* History table */
+    /* history table */
+    .table{overflow:auto}
     table{width:100%;border-collapse:collapse}
-    th,td{padding:10px;text-align:left;border-bottom:1px solid #f0f3f6}
-    th{font-size:13px;color:var(--muted)}
+    th,td{padding:12px;border-bottom:1px solid #f1f5f9;text-align:left;font-size:14px}
+    th{color:var(--muted);font-weight:600;font-size:13px}
 
-    /* Login Layout */
-    .login-page{min-height:100vh;display:grid;grid-template-columns:1fr 480px}
-    .login-left{display:flex;align-items:center;justify-content:center;flex-direction:column;padding:40px}
-    .login-card{background:var(--card);padding:26px;border-radius:12px;box-shadow:var(--shadow)}
-    .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-    input[type=text],input[type=password]{padding:10px;border-radius:8px;border:1px solid #e6e9ef}
-    .remember{display:flex;gap:8px;align-items:center}
+    /* profile form */
+    .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .profile-grid .card{padding:16px}
 
     /* responsive */
-    @media (max-width:900px){
-      .sidebar{display:none}
-      .app{flex-direction:column}
-      .login-page{grid-template-columns:1fr}
-      .cards-4{grid-template-columns:repeat(2,1fr)}
+    @media (max-width:980px){
+      .wrap{grid-template-columns: 1fr; padding: 10px}
+      .sidebar{display:none;position:fixed;left:10px;top:10px;z-index:90}
+      .camera-wrap{grid-template-columns:1fr}
+      .cards-row{grid-template-columns:repeat(2,1fr)}
+      .modes-row{grid-template-columns:1fr}
+      .devices-grid{grid-template-columns:1fr}
     }
 
+    /* small helpers */
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;align-items:center}
+    .space{flex:1}
+    .text-right{text-align:right}
+    .p-sm{padding:8px}
   </style>
 </head>
 <body>
-  <div id="app-root">
+  <div class="wrap">
 
-    <!-- LOGIN VIEW -->
-    <main id="view-login" class="login-page" style="display:none">
-      <section class="login-left">
-        <div style="text-align:center;max-width:380px">
-          <div class="logo">SH</div>
-          <h2>SafeHome</h2>
-          <p style="color:var(--muted)">Gérez votre maison où que vous soyez</p>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="logo">SH</div>
+        <div>
+          <h1>SafeHome</h1>
+          <div style="font-size:12px;color:var(--muted)">Smart Home</div>
         </div>
-      </section>
-      <section style="display:flex;align-items:center;justify-content:center">
-        <div class="login-card" style="width:100%">
-          <h3>Connexion</h3>
-          <div class="form-row">
-            <label>Email / Nom d'utilisateur</label>
-            <input id="login-user" type="text" placeholder="ex: abdel@example.com">
-          </div>
-          <div class="form-row">
-            <label>Mot de passe</label>
-            <input id="login-pass" type="password" placeholder="••••••">
-          </div>
-          <div class="form-row remember">
-            <label><input id="remember" type="checkbox"> Se souvenir de moi</label>
-            <a href="#" style="margin-left:auto;color:var(--muted);font-size:13px">Mot de passe oublié ?</a>
-          </div>
-          <div style="display:flex;gap:8px">
-            <button class="btn btn-primary" id="do-login">Se connecter</button>
-            <button class="btn btn-ghost" id="demo-login">Demo</button>
-          </div>
-          <p style="margin-top:12px;font-size:13px;color:var(--muted)">Pas de compte ? <a href="#">Créer un compte</a></p>
+      </div>
+
+      <nav class="menu" id="main-nav">
+        <a href="#" data-page="dashboard" class="active"><span class="ico">🏠</span><span>Dashboard</span></a>
+        <a href="#" data-page="surveillance"><span class="ico">📷</span><span>Surveillance</span></a>
+        <a href="#" data-page="controle"><span class="ico">💡</span><span>Contrôle</span></a>
+        <a href="#" data-page="modes"><span class="ico">🌙</span><span>Modes</span></a>
+        <a href="#" data-page="historique"><span class="ico">📜</span><span>Historique</span></a>
+        <a href="#" data-page="profil"><span class="ico">👤</span><span>Profil</span></a>
+      </nav>
+
+      <div class="logout">
+        <button id="btn-logout">Déconnexion</button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <header class="top">
+        <div>
+          <div class="page-title" id="page-title">Dashboard</div>
+          <div class="muted" style="font-size:13px">Résumé de votre maison</div>
         </div>
-      </section>
-    </main>
-
-    <!-- APP VIEW -->
-    <div id="view-app" class="app">
-      <aside class="sidebar">
-        <div class="brand"><div class="logo">SH</div><div><h1>SafeHome</h1><div style="font-size:12px;color:var(--muted)">Smart Home</div></div></div>
-        <nav class="nav" id="main-nav">
-          <a href="#" data-page="dashboard" class="active"><span class="ico">🏠</span> <span>Dashboard</span></a>
-          <a href="#" data-page="surveillance"><span class="ico">📷</span> <span>Surveillance</span></a>
-          <a href="#" data-page="controle"><span class="ico">💡</span> <span>Contrôle</span></a>
-          <a href="#" data-page="modes"><span class="ico">🌙</span> <span>Modes</span></a>
-          <a href="#" data-page="historique"><span class="ico">📜</span> <span>Historique</span></a>
-          <a href="#" data-page="profil"><span class="ico">👤</span> <span>Profil</span></a>
-        </nav>
-        <div class="logout"><button id="side-logout">Déconnexion</button></div>
-      </aside>
-
-      <div class="main">
-        <header class="top">
-          <div class="left"><div class="page-title" id="page-title">Dashboard</div></div>
-          <div class="top-right">
-            <div style="text-align:right;color:var(--muted)">Bonjour, <strong id="user-name">Rania</strong></div>
-            <div class="dropdown" id="drop-profile">
-              <div class="profile" onclick="document.getElementById('drop-profile').classList.toggle('open')">
-                <div class="avatar">R</div>
-              </div>
+        <div class="top-right">
+          <div class="userbox">
+            <div style="text-align:right;font-size:13px;color:var(--muted)">Bonjour, <strong id="user-name">Rania</strong></div>
+            <div class="dropdown" id="user-drop">
+              <div class="avatar" onclick="document.getElementById('user-drop').classList.toggle('open')">R.A</div>
               <div class="dropdown-menu">
                 <a href="#" data-page="profil">Profil</a>
                 <a href="#" id="settings">Paramètres</a>
-                <a href="#" id="do-logout">Déconnexion</a>
+                <a href="#" id="logout">Déconnexion</a>
               </div>
             </div>
           </div>
-        </header>
+        </div>
+      </header>
 
-        <section class="content">
-          <!-- Dashboard -->
-          <div id="page-dashboard" class="page">
-            <div class="card summary" style="display:flex;justify-content:space-between;align-items:center;padding:18px;gap:16px;margin-bottom:16px">
-              <div>
-                <h2 style="margin:0">Bonjour, <span id="user-greet">Rania</span></h2>
-                <p style="margin:6px 0;color:var(--muted)">Résumé de votre maison</p>
-              </div>
-              <div style="display:flex;gap:10px">
-                <button class="btn btn-ghost">Éteindre tous les appareils</button>
-                <button class="btn btn-primary">Activer Mode Nuit</button>
-              </div>
-            </div>
+      <section class="content">
+        <!-- Dashboard PAGE -->
+        <div id="page-dashboard" class="card page">
+          <div class="dash-hero">
+            <div class="hero-left">
+              <h2 class="welcome">Bonjour, <span id="greet-name">Rania</span></h2>
+              <div class="subtitle">Résumé de votre maison</div>
 
-            <div class="grid cards-4" style="margin-bottom:16px">
-              <div class="card"><div class="label">Appareils allumés</div><div class="value">3</div></div>
-              <div class="card"><div class="label">Portes ouvertes</div><div class="value">1</div></div>
-              <div class="card"><div class="label">Alertes aujourd'hui</div><div class="value">2</div></div>
-              <div class="card"><div class="label">Mode actif</div><div class="value">Aucun</div></div>
-            </div>
-
-            <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
-              <div class="card">
-                <h4>Caméra / Surveillance rapide</h4>
-                <div class="camera" id="mini-camera">Preview caméra
-                  <div class="tag">En direct</div>
-                  <div class="status green" id="mini-status">● Normal</div>
+              <div class="login-form card" style="margin-top:12px;padding:14px">
+                <div class="field">
+                  <label>Email / Nom d'utilisateur</label>
+                  <input type="text" placeholder="rania@example.com">
                 </div>
-                <div style="margin-top:12px;display:flex;gap:10px"><button class="btn btn-ghost">Voir la page Surveillance</button><button class="btn btn-primary" onclick="openPage('surveillance')">Ouvrir Surveillance</button></div>
+                <div class="field">
+                  <label>Mot de passe</label>
+                  <input type="password" placeholder="••••••">
+                </div>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <button class="btn btn-primary">Se connecter</button>
+                  <a class="link-small" href="#">Créer un compte</a>
+                </div>
               </div>
-              <div>
-                <div class="card" style="margin-bottom:12px">
-                  <h4>Actions rapides</h4>
-                  <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px">
-                    <button class="btn">Éteindre tous les appareils</button>
-                    <button class="btn">Fermer toutes les portes</button>
-                    <button class="btn btn-primary">Activer Mode Nuit</button>
-                    <button class="btn btn-primary">Activer Mode Absence</button>
+            </div>
+
+            <div style="width:340px">
+              <div class="cards-row">
+                <div class="card summary-card">
+                  <div>
+                    <div class="muted">Appareils allumés</div>
+                    <div class="small-num">3</div>
                   </div>
                 </div>
-                <div class="card">
-                  <h4>Activité récente</h4>
-                  <ul style="margin:0;padding:0;list-style:none">
-                    <li style="padding:8px 0;border-bottom:1px solid #f0f3f6">12:35 — Lumière salon allumée</li>
-                    <li style="padding:8px 0;border-bottom:1px solid #f0f3f6">11:12 — Porte principale fermée</li>
-                    <li style="padding:8px 0;border-bottom:1px solid #f0f3f6">08:05 — Alerte mouvement détecté</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Surveillance -->
-          <div id="page-surveillance" class="page" style="display:none">
-            <div class="card" style="margin-bottom:12px"><h3>Surveillance</h3><p style="color:var(--muted)">Caméra en direct (simulation)</p></div>
-            <div style="display:grid;grid-template-columns:1fr 320px;gap:16px">
-              <div class="card">
-                <div class="camera" id="main-camera">Caméra simulée
-                  <div class="tag">En direct</div>
-                  <div class="status green" id="cam-status">● Normal</div>
-                </div>
-                <div style="margin-top:10px;display:flex;gap:8px"><button class="btn">Pause</button><button class="btn">Plein écran</button><div style="margin-left:auto;color:var(--muted)">Dernière alerte : —</div></div>
-              </div>
-              <div>
-                <div class="card">
-                  <h4>Alertes de mouvement</h4>
-                  <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-                    <div>⚠️ Mouvement détecté — Salon — 12:35</div>
-                    <div>⚠️ Mouvement détecté — Entrée — 08:12</div>
-                    <div>⚠️ Mouvement détecté — Garage — 02:11</div>
+                <div class="card summary-card">
+                  <div>
+                    <div class="muted">Portes ouvertes</div>
+                    <div class="small-num" style="color:#ff7a7a">1</div>
                   </div>
                 </div>
-                <div class="card" style="margin-top:12px">
-                  <h4>Filtres</h4>
-                  <div style="display:flex;gap:8px;margin-top:8px"><button class="btn btn-ghost">Aujourd'hui</button><button class="btn btn-ghost">7 jours</button><button class="btn btn-ghost">Tout</button></div>
+                <div class="card summary-card">
+                  <div>
+                    <div class="muted">Alertes aujourd'hui</div>
+                    <div class="small-num" style="color:#ff9b42">2</div>
+                  </div>
+                </div>
+                <div class="card summary-card">
+                  <div>
+                    <div class="muted">Mode actif</div>
+                    <div class="small-num">Aucun</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Contrôle -->
-          <div id="page-controle" class="page" style="display:none">
-            <div class="card"><h3>Contrôle des appareils</h3>
-              <p style="color:var(--muted)">Gérez l'éclairage, multimédia et chauffage</p>
+          <div style="margin-top:18px" class="camera-wrap">
+            <div class="card">
+              <h4 style="margin:0 0 8px 0">Caméra / Surveillance rapide</h4>
+              <div class="camera" id="mini-camera">
+                <div class="tag">En direct</div>
+                <div class="status green" id="mini-status">● Normal</div>
+                <div style="opacity:0.12;font-size:120px">📷</div>
+              </div>
+              <div style="display:flex;gap:10px;margin-top:12px">
+                <button class="btn btn-ghost" onclick="openPage('surveillance')">Voir la page Surveillance</button>
+                <button class="btn btn-primary" onclick="openPage('surveillance')">Ouvrir Surveillance</button>
+              </div>
             </div>
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px">
-              <div class="card">
-                <h4>Éclairage</h4>
-                <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-                  <div class="device"><div><strong>Salon</strong><div style="color:var(--muted);font-size:13px">Dernière action : 12:35</div></div><div class="switch on" data-on="true" onclick="toggleSwitch(this)"><div class="knob"></div></div></div>
-                  <div class="device"><div><strong>Cuisine</strong><div style="color:var(--muted);font-size:13px">Dernière action : 08:21</div></div><div class="switch" data-on="false" onclick="toggleSwitch(this)"><div class="knob"></div></div></div>
-                  <div class="device"><div><strong>Chambre</strong><div style="color:var(--muted);font-size:13px">Dernière action : 06:02</div></div><div class="switch" data-on="false" onclick="toggleSwitch(this)"><div class="knob"></div></div></div>
+
+            <aside class="card">
+              <h4 style="margin:0 0 8px 0">Alertes de mouvement</h4>
+              <div class="alerts-list">
+                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Salon — 12:35</div></div></div>
+                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Entrée — 08:12</div></div></div>
+                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Garage — 02:11</div></div></div>
+              </div>
+            </aside>
+          </div>
+        </div>
+
+        <!-- SURVEILLANCE PAGE -->
+        <div id="page-surveillance" class="card page" style="display:none">
+          <h3>Surveillance</h3>
+          <div class="muted" style="margin-bottom:12px">Caméra en direct (simulation)</div>
+          <div class="camera" style="height:360px;position:relative">
+            <div class="tag">En direct</div>
+            <div class="status green" id="cam-status">● Normal</div>
+            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px">Image / Simulation vidéo</div>
+          </div>
+          <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
+            <button class="btn">Pause</button>
+            <button class="btn">Plein écran</button>
+            <div style="margin-left:auto;color:var(--muted)">Dernière alerte : —</div>
+          </div>
+
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 320px;gap:12px">
+            <div class="card">
+              <h4 style="margin-top:0">Alertes de mouvement</h4>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div class="alert-item">⚠️ <span style="margin-left:8px">Mouvement détecté — Salon — 12:35</span></div>
+                <div class="alert-item">⚠️ <span style="margin-left:8px">Mouvement détecté — Entrée — 08:12</span></div>
+                <div class="alert-item">⚠️ <span style="margin-left:8px">Mouvement détecté — Garage — 02:11</span></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h4 style="margin-top:0">Filtres</h4>
+              <div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn btn-ghost">Aujourd'hui</button>
+                <button class="btn btn-ghost">7 jours</button>
+                <button class="btn btn-ghost">Tout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTROLE PAGE -->
+        <div id="page-controle" class="card page" style="display:none">
+          <h3>Contrôle des appareils</h3>
+          <div class="muted">Gérez l'éclairage, multimédia et chauffage</div>
+
+          <div style="margin-top:12px" class="devices-grid">
+            <div class="card">
+              <h4>Éclairage</h4>
+              <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
+                <div class="device">
+                  <div class="meta"><div class="name">Salon</div><div class="small">Dernière action : 22:30</div></div>
+                  <div class="switch on" onclick="toggleSwitch(this)"><div class="knob"></div></div>
+                </div>
+                <div class="device">
+                  <div class="meta"><div class="name">Cuisine</div><div class="small">Dernière action : 21:10</div></div>
+                  <div class="switch" onclick="toggleSwitch(this)"><div class="knob"></div></div>
+                </div>
+                <div class="device">
+                  <div class="meta"><div class="name">Chambre</div><div class="small">Dernière action : 06:02</div></div>
+                  <div class="switch" onclick="toggleSwitch(this)"><div class="knob"></div></div>
                 </div>
               </div>
+            </div>
 
-              <div class="card">
-                <h4>Multimédia</h4>
-                <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-                  <div class="device"><div><strong>TV</strong><div style="color:var(--muted);font-size:13px">Dernière action : 11:10</div></div><div class="switch on" data-on="true" onclick="toggleSwitch(this)"><div class="knob"></div></div></div>
-                  <div class="device"><div><strong>Son</strong><div style="color:var(--muted);font-size:13px">Dernière action : 10:00</div></div><div class="switch" data-on="false" onclick="toggleSwitch(this)"><div class="knob"></div></div></div>
+            <div class="card">
+              <h4>Multimédia & Chauffage</h4>
+              <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
+                <div class="device">
+                  <div class="meta"><div class="name">TV</div><div class="small">Dernière action : 11:10</div></div>
+                  <div class="switch on" onclick="toggleSwitch(this)"><div class="knob"></div></div>
                 </div>
-                <div style="margin-top:12px">
-                  <h4>Chauffage / Climatisation</h4>
-                  <div class="device"><div><strong>Chauffage électrique</strong></div><div class="switch on" data-on="true" onclick="toggleSwitch(this)"><div class="knob"></div></div></div>
+                <div class="device">
+                  <div class="meta"><div class="name">Son</div><div class="small">Dernière action : 10:00</div></div>
+                  <div class="switch" onclick="toggleSwitch(this)"><div class="knob"></div></div>
                 </div>
-                <div style="margin-top:12px"><button class="btn btn-danger">Éteindre tous les appareils</button></div>
+                <div style="margin-top:10px">
+                  <div class="device">
+                    <div class="meta"><div class="name">Chauffage électrique</div><div class="small">Temp: 21°C</div></div>
+                    <div class="switch on" onclick="toggleSwitch(this)"><div class="knob"></div></div>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:12px"><button class="btn btn-primary" onclick="turnAllOff()">Éteindre tous les appareils</button></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODES PAGE -->
+        <div id="page-modes" class="card page" style="display:none">
+          <h3>Modes (Nuit & Absence)</h3>
+          <div class="muted">Activer rapidement un mode global</div>
+
+          <div style="margin-top:12px" class="modes-row">
+            <div class="mode-card card">
+              <div style="display:flex;gap:12px;align-items:center">
+                <div style="font-size:28px">🌙</div>
+                <div>
+                  <div style="font-weight:700">Mode Nuit</div>
+                  <div class="muted" style="font-size:13px">Éteint les lumières · Ferme les portes · Active la caméra</div>
+                </div>
+              </div>
+              <div style="margin-top:auto;display:flex;gap:8px;align-items:center">
+                <div id="badge-night" class="badge">Inactif</div>
+                <div style="flex:1"></div>
+                <button class="btn btn-primary" onclick="toggleMode('night')">Activer</button>
+              </div>
+            </div>
+
+            <div class="mode-card card">
+              <div style="display:flex;gap:12px;align-items:center">
+                <div style="font-size:28px">🏠</div>
+                <div>
+                  <div style="font-weight:700">Mode Absence</div>
+                  <div class="muted" style="font-size:13px">Ferme toutes les portes · Active la surveillance · Éteint les lumières</div>
+                </div>
+              </div>
+              <div style="margin-top:auto;display:flex;gap:8px;align-items:center">
+                <div id="badge-away" class="badge">Inactif</div>
+                <div style="flex:1"></div>
+                <button class="btn btn-primary" onclick="toggleMode('away')">Activer</button>
               </div>
             </div>
           </div>
 
-          <!-- Modes -->
-          <div id="page-modes" class="page" style="display:none">
-            <div class="card"><h3>Modes</h3><p style="color:var(--muted)">Activer rapidement un mode global</p></div>
-            <div class="modes" style="margin-top:12px">
-              <div class="mode-card">
-                <div style="display:flex;align-items:center;gap:10px"><div style="font-size:28px">🌙</div><div><strong>Mode Nuit</strong><div style="color:var(--muted);font-size:13px">Éteint les lumières, ferme les portes, active la caméra</div></div></div>
-                <div style="margin-top:auto;display:flex;gap:8px"><div class="badge" id="mode-night-badge">Inactif</div><button class="btn btn-primary" onclick="toggleMode('night')">Activer</button></div>
-              </div>
-              <div class="mode-card">
-                <div style="display:flex;align-items:center;gap:10px"><div style="font-size:28px">🏠</div><div><strong>Mode Absence</strong><div style="color:var(--muted);font-size:13px">Ferme toutes les portes, active la surveillance, éteint les lumières</div></div></div>
-                <div style="margin-top:auto;display:flex;gap:8px"><div class="badge" id="mode-away-badge">Inactif</div><button class="btn btn-primary" onclick="toggleMode('away')">Activer</button></div>
-              </div>
-            </div>
-            <div style="margin-top:12px" class="card">
-              <h4>Historique rapide des modes</h4>
-              <ul style="margin:0;padding:0;list-style:none">
-                <li>Mode Nuit activé — Hier 23:15</li>
-                <li>Mode Absence désactivé — Aujourd'hui 08:05</li>
-              </ul>
-            </div>
+          <div style="margin-top:12px" class="card">
+            <h4 style="margin-top:0">Historique rapide des modes</h4>
+            <ul style="margin:0;padding-left:18px">
+              <li>Mode Nuit activé — Hier 23:15</li>
+              <li>Mode Absence désactivé — Aujourd'hui 08:05</li>
+            </ul>
           </div>
+        </div>
 
-          <!-- Historique -->
-          <div id="page-historique" class="page" style="display:none">
-            <div class="card"><h3>Historique des activités</h3></div>
-            <div class="card" style="margin-top:12px">
-              <div style="display:flex;gap:8px;flex-wrap:wrap"><select><option>Tous</option><option>Appareils</option><option>Portes</option><option>Alertes</option><option>Modes</option></select><input type="date"><button class="btn btn-ghost">Filtrer</button></div>
-              <div style="margin-top:12px;overflow:auto">
-                <table>
-                  <thead><tr><th>Date & heure</th><th>Type</th><th>Détail</th><th>Utilisateur</th></tr></thead>
-                  <tbody>
-                    <tr><td>12/12 21:15</td><td>Appareil</td><td>Lumière salon éteinte</td><td>Rania</td></tr>
-                    <tr><td>12/12 20:45</td><td>Mode</td><td>Mode Nuit activé</td><td>Safae</td></tr>
-                    <tr><td>12/12 18:00</td><td>Alerte</td><td>Mouvement détecté – Entrée</td><td>Système</td></tr>
-                    <tr><td>12/12 17:30</td><td>Porte</td><td>Porte principale fermée</td><td>Reda</td></tr>
-                  </tbody>
-                </table>
-              </div>
+        <!-- HISTORIQUE PAGE -->
+        <div id="page-historique" class="card page" style="display:none">
+          <h3>Historique des activités</h3>
+          <div style="margin-top:12px" class="card">
+            <div style="display:flex;gap:8px;align-items:center">
+              <select><option>Tous</option><option>Appareils</option><option>Portes</option><option>Alertes</option><option>Modes</option></select>
+              <input type="date">
+              <button class="btn btn-ghost">Filtrer</button>
+              <div style="flex:1"></div>
+              <button class="btn btn-primary">Exporter</button>
             </div>
-          </div>
 
-          <!-- Profil -->
-          <div id="page-profil" class="page" style="display:none">
-            <div class="card"><h3>Profil utilisateur</h3></div>
-            <div class="card" style="margin-top:12px">
-              <h4>Informations personnelles</h4>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
-                <div><label>Nom complet</label><input type="text" value="Rania" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eef2f6"></div>
-                <div><label>Email</label><input type="text" value="rania@example.com" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eef2f6"></div>
-                <div><label>Téléphone</label><input type="text" value="+212 6 00 00 00 00" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eef2f6"></div>
-                <div><label>Adresse</label><input type="text" value="Marrakech, Maroc" style="width:100%;padding:8px;border-radius:8px;border:1px solid #eef2f6"></div>
+            <div style="margin-top:12px" class="table">
+              <table>
+                <thead><tr><th>Date & heure</th><th>Type</th><th>Détail</th><th>Utilisateur</th></tr></thead>
+                <tbody>
+                  <tr><td>12/12 21:15</td><td>Appareil</td><td>Lumière salon éteinte</td><td>Rania</td></tr>
+                  <tr><td>12/12 20:45</td><td>Mode</td><td>Mode Nuit activé</td><td>Safae</td></tr>
+                  <tr><td>12/12 18:00</td><td>Alerte</td><td>Mouvement détecté – Entrée</td><td>Système</td></tr>
+                  <tr><td>12/12 17:30</td><td>Porte</td><td>Porte principale fermée</td><td>Reda</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- PROFIL PAGE -->
+        <div id="page-profil" class="page" style="display:none">
+          <div class="profile-grid">
+            <div class="card">
+              <h3>Informations personnelles</h3>
+              <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div class="field"><label>Nom complet</label><input type="text" value="Rania Al-Farsi"></div>
+                <div class="field"><label>Email</label><input type="text" value="rania.alfarsi@email.com"></div>
+                <div class="field"><label>Numéro de téléphone</label><input type="text" value="+33 6 12 34 56 78"></div>
+                <div class="field"><label>Adresse</label><input type="text" value="123 Rue de Paix, Paris, France"></div>
               </div>
               <div style="margin-top:12px"><button class="btn btn-primary">Enregistrer les modifications</button></div>
             </div>
 
-            <div class="card" style="margin-top:12px">
-              <h4>Sécurité du compte</h4>
-              <div style="display:grid;gap:8px;margin-top:8px">
+            <div class="card">
+              <h3>Sécurité du compte</h3>
+              <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
                 <input type="password" placeholder="Ancien mot de passe">
                 <input type="password" placeholder="Nouveau mot de passe">
                 <input type="password" placeholder="Confirmer le mot de passe">
                 <button class="btn btn-primary">Mettre à jour le mot de passe</button>
               </div>
+
+              <div style="margin-top:18px">
+                <h4>Préférences</h4>
+                <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
+                  <select><option>Français</option><option>Anglais</option></select>
+                  <div style="flex:1"></div>
+                  <label style="display:flex;align-items:center;gap:8px"><input type="radio" name="theme" checked> Clair</label>
+                  <label style="display:flex;align-items:center;gap:8px"><input type="radio" name="theme"> Sombre</label>
+                </div>
+              </div>
             </div>
-
           </div>
+        </div>
 
-        </section>
-      </div>
-    </div>
-
+      </section>
+    </main>
   </div>
 
   <script>
-    // Simple navigation between pages
+    // ---------- SIMPLE SPA NAV ----------
     function openPage(page){
-      document.querySelectorAll('.nav a').forEach(a=>a.classList.remove('active'));
-      document.querySelectorAll('.page').forEach(p=>p.style.display='none');
-      document.getElementById('page-'+page).style.display='block';
-      document.getElementById('page-title').textContent = page.charAt(0).toUpperCase()+page.slice(1);
-      document.querySelector('.nav a[data-page="'+page+'"]').classList.add('active');
+      // hide all pages
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      // show selected
+      const el = document.getElementById('page-' + page);
+      if(el) el.style.display = 'block';
+      // update nav active
+      document.querySelectorAll('#main-nav a').forEach(a => a.classList.remove('active'));
+      const nav = document.querySelector('#main-nav a[data-page="'+page+'"]');
+      if(nav) nav.classList.add('active');
+      // update title
+      document.getElementById('page-title').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+      // close user dropdown
+      document.getElementById('user-drop').classList.remove('open');
+      // scroll top of main content
+      window.scrollTo({top:0, behavior:'smooth'});
     }
 
-    document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click', function(e){e.preventDefault();openPage(this.dataset.page)}));
+    // nav links
+    document.querySelectorAll('#main-nav a').forEach(a=>{
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        openPage(this.dataset.page);
+      })
+    });
+    // dropdown menu links
+    document.querySelectorAll('.dropdown-menu a[data-page]').forEach(a=>{
+      a.addEventListener('click', function(e){ e.preventDefault(); openPage(this.dataset.page); });
+    });
 
-    // Switch toggle
+    // show initial
+    openPage('dashboard');
+
+    // ---------- SWITCHES ----------
     function toggleSwitch(el){
-      const on = el.classList.toggle('on');
-      el.setAttribute('data-on', on);
+      el.classList.toggle('on');
     }
 
-    // Modes
+    function turnAllOff(){
+      document.querySelectorAll('.switch').forEach(s => s.classList.remove('on'));
+      alert('Tous les appareils ont été éteints (simulation).');
+    }
+
+    // ---------- MODES ----------
     function toggleMode(mode){
-      const nightBadge = document.getElementById('mode-night-badge');
-      const awayBadge = document.getElementById('mode-away-badge');
-      if(mode==='night'){
-        nightBadge.textContent = nightBadge.textContent === 'Actif' ? 'Inactif' : 'Actif';
-      }else{
-        awayBadge.textContent = awayBadge.textContent === 'Actif' ? 'Inactif' : 'Actif';
+      if(mode === 'night'){
+        const b = document.getElementById('badge-night');
+        b.textContent = (b.textContent === 'Actif') ? 'Inactif' : 'Actif';
+        b.style.background = (b.textContent === 'Actif') ? 'linear-gradient(90deg,#e6ffef,#dff7ee)' : '#f1f5f9';
+      } else {
+        const b = document.getElementById('badge-away');
+        b.textContent = (b.textContent === 'Actif') ? 'Inactif' : 'Actif';
+        b.style.background = (b.textContent === 'Actif') ? 'linear-gradient(90deg,#e6ffef,#dff7ee)' : '#f1f5f9';
       }
     }
 
-    // Demo login / view switching
-    document.getElementById('do-login').addEventListener('click', function(){
-      // naive fake login
-      document.getElementById('view-login').style.display='none';
-      document.getElementById('view-app').style.display='flex';
-    });
-    document.getElementById('demo-login').addEventListener('click', function(){
-      document.getElementById('view-login').style.display='none';
-      document.getElementById('view-app').style.display='flex';
-    });
+    // logout / demo behavior
+    document.getElementById('btn-logout').addEventListener('click', ()=> alert('Déconnexion (simulation)'));
+    document.getElementById('logout').addEventListener('click', (e)=>{ e.preventDefault(); alert('Déconnexion (simulation)'); });
 
-    document.getElementById('side-logout').addEventListener('click', function(){
-      document.getElementById('view-app').style.display='none';
-      document.getElementById('view-login').style.display='grid';
-    });
-    document.getElementById('do-logout').addEventListener('click', function(e){
-      e.preventDefault();document.getElementById('view-app').style.display='none';document.getElementById('view-login').style.display='grid';
-    });
+    // small keyboard shortcut for demo: press L to open login modal (not implemented modal, just alert)
+    window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase() === 'l'){ alert('Login demo (simulation)'); } });
 
-    // init: show login or app depending on demo
-    (function(){
-      // show app by default for preview
-      document.getElementById('view-login').style.display='none';
-      document.getElementById('view-app').style.display='flex';
-      openPage('dashboard');
-    })();
+    // optional: responsive improvements (close sidebar on small screens)
+    function initResponsive(){
+      if(window.innerWidth < 980){
+        document.querySelector('.sidebar').style.display = 'none';
+      } else {
+        document.querySelector('.sidebar').style.display = 'flex';
+      }
+    }
+    window.addEventListener('resize', initResponsive);
+    initResponsive();
   </script>
 </body>
 </html>
