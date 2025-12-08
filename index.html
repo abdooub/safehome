@@ -344,7 +344,7 @@
 
               <div style="margin-top:12px" class="card">
                 <h4 style="margin:0 0 10px 0">Connexion rapide</h4>
-                <div class="field"><label class="small">Email / Nom d'utilisateur</label><input id="login-user" type="text" placeholder="rania@example.com"></div>
+                <div class="field"><label class="small">Email / Nom d'utilisateur</label><input id="login-user" type="text" placeholder="user@example.com"></div>
                 <div class="field"><label class="small">Mot de passe</label><input id="login-pass" type="password" placeholder="••••••"></div>
                 <div style="display:flex;gap:8px;margin-top:8px">
                   <button class="btn btn-primary" id="do-login">Se connecter</button>
@@ -862,8 +862,8 @@ function initState(){
   if(!localStorage.getItem('safe_devices')) save('safe_devices', DEFAULT_DEVICES);
   if(!localStorage.getItem('safe_modes')) save('safe_modes', { night:false, away:false, history:[] });
   if(!localStorage.getItem('safe_history')) save('safe_history', []);
-  if(!localStorage.getItem('safe_profile')) save('safe_profile', { name:'Rania Al-Farsi', email:'rania.alfarsi@email.com', phone:'+33 6 12 34 56 78', address:'123 Rue de Paix' });
-  if(!localStorage.getItem('safe_user')) save('safe_user', { username:'rania', password:'1234' }); // demo user
+  if(!localStorage.getItem('safe_profile')) save('safe_profile', { name:'your name', email:'yournamegmail.com', phone:'+33 6 12 34 56 78', address:'123 Rue de Paix' });
+  if(!localStorage.getItem('safe_user')) save('safe_user', { username:'abdelmounaim', password:'1234' }); // demo user
   if(!localStorage.getItem('safe_theme')) save('safe_theme', 'light');
 }
 initState();
