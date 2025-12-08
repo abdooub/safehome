@@ -30,6 +30,38 @@
       --primary:#4aa3ff;
       color: #e6eef6;
     }
+    .status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    background: green;
+}
+
+.alert-item {
+    padding: 8px;
+    background: #fff3e0;
+    margin-top: 6px;
+    border-radius: 4px;
+}
+.history-item {
+    display: grid;
+    grid-template-columns: 150px 120px 1fr 120px;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: white;
+    border-radius: 6px;
+}
+.quick-actions button {
+    padding: 12px;
+    margin: 6px;
+    background: #1e88e5;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
 /* Mode active */
 .active-mode {
     border: 2px solid #1e88e5;
@@ -390,6 +422,31 @@
     <p>Ferme portes – Active surveillance – Éteint lumières</p>
     <button id="btn-absence" class="btn-primary">Activer Mode Absence</button>
 </div>
+<div class="quick-actions">
+    <button onclick="turnOffAll()">Éteindre tous les appareils</button>
+    <button onclick="closeAllDoors()">Fermer toutes les portes</button>
+    <button onclick="activateNightMode()">Activer Mode Nuit</button>
+    <button onclick="activateAbsenceMode()">Activer Mode Absence</button>
+</div>
+<div id="history-list"></div>
+<div class="camera-box">
+    <div class="camera-header">
+        <span class="tag">En direct</span>
+        <span id="camera-status" class="status-dot"></span>
+    </div>
+
+    <div class="camera-video">
+        <img src="camera.jpg" style="width:100%;">
+    </div>
+
+    <button id="btn-camera" onclick="toggleCamera()">Pause</button>
+
+    <p id="last-alert">Dernière alerte : aucune</p>
+
+    <div id="alert-list"></div>
+</div>
+
+
 
 <script>
 /*
@@ -399,7 +456,118 @@
   - features:
       login (local), persistent devices, add device, toggle device, modes, history push,
       profile save, export CSV, filters, theme toggle
+      
 */
+/*---------------------------------------------------
+   4. RAPID ACTIONS – Éteindre / Fermer / Activer Mode
+---------------------------------------------------*/
+
+function logAction(type, detail, user = "Système") {
+    const data = JSON.parse(localStorage.getItem("safehome_history") || "[]");
+
+    data.unshift({
+        time: new Date().toLocaleString(),
+        type,
+        detail,
+        user
+    });
+
+    localStorage.setItem("safehome_history", JSON.stringify(data));
+}
+/*---------------------------------------------------
+   5. HISTORIQUE – System logging + affichage
+---------------------------------------------------*/
+
+function loadHistory() {
+    const container = document.querySelector("#history-list");
+    if (!container) return;
+
+    const data = JSON.parse(localStorage.getItem("safehome_history") || "[]");
+
+    container.innerHTML = "";
+
+    data.forEach(item => {
+        container.innerHTML += `
+        <div class="history-item">
+            <div><strong>${item.time}</strong></div>
+            <div>${item.type}</div>
+            <div>${item.detail}</div>
+            <div>${item.user}</div>
+        </div>
+        `;
+    });
+}
+
+document.addEventListener("DOMContentLoaded", loadHistory);
+/*---------------------------------------------------
+   6. SURVEILLANCE – Camera simulation + alerts
+---------------------------------------------------*/
+
+let cameraRunning = true;
+
+// change camera status randomly
+setInterval(() => {
+    if (!cameraRunning) return;
+
+    const hasMotion = Math.random() < 0.2; // 20% chance
+
+    const statusDot = document.querySelector("#camera-status");
+    const lastAlert = document.querySelector("#last-alert");
+    const alertList = document.querySelector("#alert-list");
+
+    if (hasMotion) {
+        statusDot.style.background = "red";
+        
+        const time = new Date().toLocaleTimeString();
+        lastAlert.textContent = "Dernière alerte : " + time;
+
+        // push to UI
+        alertList.innerHTML = `
+            <div class="alert-item">⚠ Mouvement détecté – ${time}</div>
+        ` + alertList.innerHTML;
+
+        // add to history
+        logAction("Alerte", "Mouvement détecté");
+    } else {
+        statusDot.style.background = "green";
+    }
+
+}, 3000);
+
+// pause/resume camera
+function toggleCamera() {
+    cameraRunning = !cameraRunning;
+    document.querySelector("#btn-camera").textContent =
+        cameraRunning ? "Pause" : "Reprendre";
+}
+
+// turn OFF all devices
+function turnOffAll() {
+    document.querySelectorAll(".device-switch").forEach(sw => {
+        sw.checked = false;
+    });
+
+    logAction("Appareil", "Tous les appareils ont été éteints");
+    alert("Tous les appareils ont été éteints !");
+}
+
+// close all doors (simulation)
+function closeAllDoors() {
+    logAction("Portes", "Toutes les portes ont été fermées");
+    alert("Toutes les portes ont été fermées !");
+}
+
+// activate modes fast
+function activateNightMode() {
+    setActiveMode("nuit");
+    logAction("Mode", "Mode Nuit activé");
+}
+
+function activateAbsenceMode() {
+    setActiveMode("absence");
+    logAction("Mode", "Mode Absence activé");
+}
+
 
 
 // ---------- Utilities ----------
