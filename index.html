@@ -546,6 +546,178 @@
 
 
 <script>
+  /*******************************
+  Simple multi-user login (frontend demo)
+  - Creates 6 demo accounts with password "1234"
+  - Stores users in localStorage under key "safe_users"
+  - Adds login/logout functions that integrate with existing SPA
+  - NOTE: client-side storage is not secure for production.
+*******************************/
+
+const USERS_KEY = "safe_users";
+const LOGGED_KEY = "safe_logged_user"; // will store username
+
+// default accounts to create (username -> display name)
+const DEFAULT_ACCOUNTS = [
+  { username: "rania", displayName: "Rania mouncir" },
+  { username: "abdelmounaim", displayName: "Abdelmounaim Ouballa" },
+  { username: "safae", displayName: "Safae oubella" },
+  { username: "reda", displayName: "Reda achouaq" },
+  { username: "louay", displayName: "Louay hanouch" },
+  { username: "saad", displayName: "Saad outaghdouin" }
+];
+
+// initialize users in localStorage if not present
+function initDemoUsers() {
+  const existing = JSON.parse(localStorage.getItem(USERS_KEY) || "null");
+  if (existing && Array.isArray(existing) && existing.length > 0) {
+    // keep existing users
+    return;
+  }
+  // create accounts: password = "1234"
+  const users = DEFAULT_ACCOUNTS.map(u => ({
+    username: u.username,
+    // store password plaintext here for demo; in production use server-side auth
+    password: "1234",
+    displayName: u.displayName,
+    email: `${u.username}@example.com`,
+    phone: "",
+    address: ""
+  }));
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+  console.log("Demo users created:", users.map(u=>u.username).join(", "));
+}
+
+// helper: find user
+function findUserByUsername(username){
+  const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+  return users.find(u => u.username.toLowerCase() === String(username).toLowerCase());
+}
+
+// login function (used by existing login button)
+function loginUser(username, password){
+  if(!username || !password){ alert("Donne le nom d'utilisateur et mot de passe"); return false; }
+  const user = findUserByUsername(username);
+  if(!user){ alert("Utilisateur inconnu"); return false; }
+  if(String(password) !== String(user.password)){ alert("Mot de passe incorrect"); return false; }
+
+  // save logged user
+  localStorage.setItem(LOGGED_KEY, JSON.stringify({ username: user.username, displayName: user.displayName }));
+  renderLoggedUser();
+  // push a small history log if you have history function
+  if(typeof pushHistory === "function"){
+    pushHistory({ ts: new Date().toISOString(), type: "auth", detail: `Connexion: ${user.username}`, user: user.displayName });
+  }
+  alert("Connecté: " + user.displayName);
+  return true;
+}
+
+// logout
+function logoutUser(){
+  localStorage.removeItem(LOGGED_KEY);
+  renderLoggedUser();
+  if(typeof pushHistory === "function"){
+    pushHistory({ ts: new Date().toISOString(), type: "auth", detail: `Déconnexion`, user: getCurrentUserName() });
+  }
+  alert("Déconnecté");
+}
+
+// return current logged username or null
+function getLoggedUser(){
+  return JSON.parse(localStorage.getItem(LOGGED_KEY) || "null");
+}
+
+// display logged user on UI (update avatar/name)
+function renderLoggedUser(){
+  const u = getLoggedUser();
+  // update header name if element exists
+  const nameEl = document.getElementById('user-name');
+  const avatarEl = document.getElementById('avatar');
+  const greetEl = document.getElementById('greet-name');
+  if(u && nameEl) nameEl.textContent = u.displayName.split(' ')[0] || u.username;
+  if(u && avatarEl) avatarEl.textContent = (u.displayName || u.username).split(' ').map(x=>x[0]).slice(0,2).join('.');
+  if(u && greetEl) greetEl.textContent = (u.displayName || u.username).split(' ')[0] || u.username;
+
+  // If no user, show "Invité"
+  if(!u){
+    if(nameEl) nameEl.textContent = "Invité";
+    if(avatarEl) avatarEl.textContent = "R";
+    if(greetEl) greetEl.textContent = "Invité";
+  }
+}
+
+// convenience: auto-fill login inputs & submit (for quick demo buttons)
+function quickLoginAs(username){
+  const user = findUserByUsername(username);
+  if(!user){ alert("Utilisateur introuvable"); return; }
+  // set inputs if present
+  const inpUser = document.getElementById('login-user');
+  const inpPass = document.getElementById('login-pass');
+  if(inpUser) inpUser.value = user.username;
+  if(inpPass) inpPass.value = user.password;
+  // attempt login
+  loginUser(user.username, user.password);
+}
+
+// bind existing login button on page
+function bindLoginForm(){
+  const btn = document.getElementById('do-login');
+  if(btn){
+    btn.removeEventListener('click', _loginHandler);
+    btn.addEventListener('click', _loginHandler);
+  }
+  // also allow Enter key on password field
+  const pass = document.getElementById('login-pass');
+  if(pass){
+    pass.addEventListener('keydown', e => { if(e.key === 'Enter') _loginHandler(); });
+  }
+
+  function _loginHandler(){
+    const u = document.getElementById('login-user') ? document.getElementById('login-user').value.trim() : '';
+    const p = document.getElementById('login-pass') ? document.getElementById('login-pass').value : '';
+    if(loginUser(u, p)){
+      // optional: navigate to dashboard after login if function exists
+      if(typeof openPage === "function") openPage('dashboard');
+    }
+  }
+}
+
+// create small demo buttons list (optional): adds quick-login buttons on the page
+function renderDemoButtons(targetSelector){
+  const target = document.querySelector(targetSelector);
+  if(!target) return;
+  const wrapper = document.createElement('div');
+  wrapper.style.display = 'flex';
+  wrapper.style.gap = '8px';
+  wrapper.style.flexWrap = 'wrap';
+  wrapper.style.marginTop = '8px';
+
+  const users = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
+  users.forEach(u=>{
+    const btn = document.createElement('button');
+    btn.textContent = u.username;
+    btn.className = 'btn btn-ghost';
+    btn.onclick = () => quickLoginAs(u.username);
+    wrapper.appendChild(btn);
+  });
+  target.appendChild(wrapper);
+}
+
+// helper: get display name of current user
+function getCurrentUserName(){
+  const lg = getLoggedUser();
+  return lg ? lg.displayName || lg.username : 'Système';
+}
+
+/* ----------------- init on load ----------------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  initDemoUsers();
+  bindLoginForm();
+  renderLoggedUser();
+  // optional: render demo quick login buttons below the login form
+  renderDemoButtons('.login-form'); // assumes you have a .login-form container
+});
+
 /*
   Frontend-only logic:
   - localStorage keys:
