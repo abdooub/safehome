@@ -2,51 +2,10 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SafeHome — Maquette (SPA)</title>
-  <style>
-    /* ---------- THEME / VARIABLES ---------- */
-    :root{
-      --bg: #e9f0f6;                /* page background (soft blue) */
-      --panel: #ffffff;             /* cards background */
-      --muted: #6b7280;             /* grey text */
-      --surface: #f3f7fb;
-      --primary: #1976d2;           /* main blue */
-      --primary-600: #0f62c9;
-      --accent: #0b9d58;            /* green accent if needed */
-      --shadow-1: 0 10px 30px rgba(13,38,59,0.08);
-      --shadow-2: 0 6px 18px rgba(15,23,42,0.06);
-      --radius-lg: 12px;
-      --radius-md: 10px;
-      --gap: 18px;
-      --max-width: 1180px;
-      --font-sans: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-
-    /* ---------- RESET & BASE ---------- */
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      font-family:var(--font-sans);
-      background: linear-gradient(180deg, #e9f3fa 0%, var(--bg) 100%);
-      color:#0f1724;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:40px;
-    }
-    a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
-
-    /* ---------- APP WRAPPER ---------- */
-    .wrap{
-      max-width:var(--max-width);
-      margin:0 auto;
-      display:grid;
-      grid-template-columns: 240px 1fr;
-      gap:var(--gap);
-      align-items:start;
-    }
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SafeHome — Tableau de bord</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     /* ---------- SIDEBAR ---------- */
     .sidebar{
@@ -122,11 +81,6 @@
       padding:12px;border-radius:8px;border:1px solid #e6eef6;background:linear-gradient(180deg,#fff,#fbfdff);font-size:14px
     }
     .btn{padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
-    .btn-primary{background:var(--primary);color:white;box-shadow:0 6px 18px rgba(25,118,210,0.12)}
-    .link-small{font-size:13px;color:var(--muted);display:inline-block;margin-top:8px}
-
-    /* summary cards */
-    .cards-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
     .summary-card{padding:14px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
     .small-num{font-size:20px;font-weight:800;color:var(--primary-600)}
 
@@ -193,19 +147,38 @@
     <aside class="sidebar">
       <div class="brand">
         <div class="logo">SH</div>
-        <div>
-          <h1>SafeHome</h1>
-          <div style="font-size:12px;color:var(--muted)">Smart Home</div>
-        </div>
+        <span>SafeHome</span>
       </div>
-
-      <nav class="menu" id="main-nav">
-        <a href="#" data-page="dashboard" class="active"><span class="ico">🏠</span><span>Dashboard</span></a>
-        <a href="#" data-page="surveillance"><span class="ico">📷</span><span>Surveillance</span></a>
-        <a href="#" data-page="controle"><span class="ico">💡</span><span>Contrôle</span></a>
-        <a href="#" data-page="modes"><span class="ico">🌙</span><span>Modes</span></a>
-        <a href="#" data-page="historique"><span class="ico">📜</span><span>Historique</span></a>
-        <a href="#" data-page="profil"><span class="ico">👤</span><span>Profil</span></a>
+      
+      <nav class="nav">
+        <a href="#" class="nav-link active" data-page="dashboard">
+          <i class="fas fa-home"></i>
+          <span>Tableau de bord</span>
+        </a>
+        <a href="#" class="nav-link" data-page="surveillance">
+          <i class="fas fa-video"></i>
+          <span>Surveillance</span>
+        </a>
+        <a href="#" class="nav-link" data-page="controle">
+          <i class="fas fa-lightbulb"></i>
+          <span>Contrôle</span>
+        </a>
+        <a href="#" class="nav-link" data-page="modes">
+          <i class="fas fa-moon"></i>
+          <span>Modes</span>
+        </a>
+        <a href="#" class="nav-link" data-page="historique">
+          <i class="fas fa-history"></i>
+          <span>Historique</span>
+        </a>
+        <a href="#" class="nav-link" data-page="profil">
+          <i class="fas fa-user"></i>
+          <span>Profil</span>
+        </a>
+        <a href="#" class="nav-link" id="logout">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Déconnexion</span>
+        </a>
       </nav>
 
       <div class="logout">
@@ -510,81 +483,11 @@
     </main>
   </div>
 
-  <script>
-    // ---------- SIMPLE SPA NAV ----------
-    function openPage(page){
-      // hide all pages
-      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-      // show selected
-      const el = document.getElementById('page-' + page);
-      if(el) el.style.display = 'block';
-      // update nav active
-      document.querySelectorAll('#main-nav a').forEach(a => a.classList.remove('active'));
-      const nav = document.querySelector('#main-nav a[data-page="'+page+'"]');
-      if(nav) nav.classList.add('active');
-      // update title
-      document.getElementById('page-title').textContent = page.charAt(0).toUpperCase() + page.slice(1);
-      // close user dropdown
-      document.getElementById('user-drop').classList.remove('open');
-      // scroll top of main content
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
+  <!-- Mobile Menu Button (Hidden on desktop) -->
+  <button class="mobile-menu-btn">
+    <i class="fas fa-bars"></i>
+  </button>
 
-    // nav links
-    document.querySelectorAll('#main-nav a').forEach(a=>{
-      a.addEventListener('click', function(e){
-        e.preventDefault();
-        openPage(this.dataset.page);
-      })
-    });
-    // dropdown menu links
-    document.querySelectorAll('.dropdown-menu a[data-page]').forEach(a=>{
-      a.addEventListener('click', function(e){ e.preventDefault(); openPage(this.dataset.page); });
-    });
-
-    // show initial
-    openPage('dashboard');
-
-    // ---------- SWITCHES ----------
-    function toggleSwitch(el){
-      el.classList.toggle('on');
-    }
-
-    function turnAllOff(){
-      document.querySelectorAll('.switch').forEach(s => s.classList.remove('on'));
-      alert('Tous les appareils ont été éteints (simulation).');
-    }
-
-    // ---------- MODES ----------
-    function toggleMode(mode){
-      if(mode === 'night'){
-        const b = document.getElementById('badge-night');
-        b.textContent = (b.textContent === 'Actif') ? 'Inactif' : 'Actif';
-        b.style.background = (b.textContent === 'Actif') ? 'linear-gradient(90deg,#e6ffef,#dff7ee)' : '#f1f5f9';
-      } else {
-        const b = document.getElementById('badge-away');
-        b.textContent = (b.textContent === 'Actif') ? 'Inactif' : 'Actif';
-        b.style.background = (b.textContent === 'Actif') ? 'linear-gradient(90deg,#e6ffef,#dff7ee)' : '#f1f5f9';
-      }
-    }
-
-    // logout / demo behavior
-    document.getElementById('btn-logout').addEventListener('click', ()=> alert('Déconnexion (simulation)'));
-    document.getElementById('logout').addEventListener('click', (e)=>{ e.preventDefault(); alert('Déconnexion (simulation)'); });
-
-    // small keyboard shortcut for demo: press L to open login modal (not implemented modal, just alert)
-    window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase() === 'l'){ alert('Login demo (simulation)'); } });
-
-    // optional: responsive improvements (close sidebar on small screens)
-    function initResponsive(){
-      if(window.innerWidth < 980){
-        document.querySelector('.sidebar').style.display = 'none';
-      } else {
-        document.querySelector('.sidebar').style.display = 'flex';
-      }
-    }
-    window.addEventListener('resize', initResponsive);
-    initResponsive();
-  </script>
+  <script src="app.js"></script>
 </body>
 </html>
