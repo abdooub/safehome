@@ -9,11 +9,10 @@
 </head>
 <body>
   <div class="wrap">
-
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="brand">
-        <div class="logo">SH</div>
+        <img src="sapell logo.jpeg" alt="Sapell Logo" class="logo-img">
         <span>SafeHome</span>
       </div>
       
@@ -57,100 +56,144 @@
     <main class="main">
       <header class="top">
         <div>
-          <div class="page-title" id="page-title">Dashboard</div>
-          <div class="muted" style="font-size:13px">Résumé de votre maison</div>
-        </div>
-        <div class="top-right">
-          <div class="userbox">
-            <div style="text-align:right;font-size:13px;color:var(--muted)">Bonjour, <strong id="user-name">Rania</strong></div>
-            <div class="dropdown" id="user-drop">
-              <div class="avatar" onclick="document.getElementById('user-drop').classList.toggle('open')">R.A</div>
-              <div class="dropdown-menu">
-                <a href="#" data-page="profil">Profil</a>
-                <a href="#" id="settings">Paramètres</a>
-                <a href="#" id="logout">Déconnexion</a>
-              </div>
-            </div>
-          </div>
+          <h1>Bonjour, <span>Safae</span></h1>
+          <p class="subtitle">Référez votre master email pour le sauvegarder</p>
         </div>
       </header>
 
       <section class="content">
         <!-- Dashboard PAGE -->
-        <div id="page-dashboard" class="card page">
+        <div id="page-dashboard" class="page active">
           <div class="dash-hero">
-            <div class="hero-left">
-              <h2 class="welcome">Bonjour, <span id="greet-name">Rania</span></h2>
-              <div class="subtitle">Résumé de votre maison</div>
-
-              <div class="login-form card" style="margin-top:12px;padding:14px">
-                <div class="field">
-                  <label>Email / Nom d'utilisateur</label>
-                  <input type="text" placeholder="rania@example.com">
-                </div>
-                <div class="field">
-                  <label>Mot de passe</label>
-                  <input type="password" placeholder="••••••">
-                </div>
-                <div style="display:flex;gap:8px;align-items:center">
-                  <button class="btn btn-primary">Se connecter</button>
-                  <a class="link-small" href="#">Créer un compte</a>
-                </div>
+            <div class="login-form card">
+              <h3>Se connecter</h3>
+              <div class="field">
+                <label>Email / Nom d'utilisateur</label>
+                <input type="text" placeholder="votre@email.com">
+              </div>
+              <div class="field">
+                <label>Mot de passe</label>
+                <input type="password" placeholder="••••••">
+              </div>
+              <div class="form-actions">
+                <button class="btn btn-primary">Se connecter</button>
+                <a href="#" class="forgot-password">Sur perdu son mot de passe ?</a>
+                <a href="#" class="create-account">Créer un compte</a>
               </div>
             </div>
+            
+            <div class="stats-grid">
 
-            <div style="width:340px">
-              <div class="cards-row">
-                <div class="card summary-card">
-                  <div>
-                    <div class="muted">Appareils allumés</div>
-                    <div class="small-num">3</div>
-                  </div>
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-lightbulb"></i>
                 </div>
-                <div class="card summary-card">
-                  <div>
-                    <div class="muted">Portes ouvertes</div>
-                    <div class="small-num" style="color:#ff7a7a">1</div>
-                  </div>
+                <div class="stat-info">
+                  <div class="stat-value">3</div>
+                  <div class="stat-label">Appareils allumés</div>
                 </div>
-                <div class="card summary-card">
-                  <div>
-                    <div class="muted">Alertes aujourd'hui</div>
-                    <div class="small-num" style="color:#ff9b42">2</div>
-                  </div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-door-open"></i>
                 </div>
-                <div class="card summary-card">
-                  <div>
-                    <div class="muted">Mode actif</div>
-                    <div class="small-num">Aucun</div>
-                  </div>
+                <div class="stat-info">
+                  <div class="stat-value">4</div>
+                  <div class="stat-label">Portes ouvertes</div>
                 </div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-door-closed"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-value">1</div>
+                  <div class="stat-label">Portes fermées</div>
+                </div>
+              </div>
+              
+              <div class="stat-card">
+                <div class="stat-icon">
+                  <i class="fas fa-bell"></i>
+                </div>
+                <div class="stat-info">
+                  <div class="stat-value">2</div>
+                  <div class="stat-label">Alarme active</div>
+                </div>
+              </div>
               </div>
             </div>
           </div>
-
-          <div style="margin-top:18px" class="camera-wrap">
-            <div class="card">
-              <h4 style="margin:0 0 8px 0">Caméra / Surveillance rapide</h4>
-              <div class="camera" id="mini-camera">
-                <div class="tag">En direct</div>
-                <div class="status green" id="mini-status">● Normal</div>
-                <div style="opacity:0.12;font-size:120px">📷</div>
-              </div>
-              <div style="display:flex;gap:10px;margin-top:12px">
-                <button class="btn btn-ghost" onclick="openPage('surveillance')">Voir la page Surveillance</button>
-                <button class="btn btn-primary" onclick="openPage('surveillance')">Ouvrir Surveillance</button>
+          
+          <div class="mode-toggle">
+            <i class="fas fa-moon"></i>
+            <span>Mode nuit</span>
+            <label class="switch">
+              <input type="checkbox">
+              <span class="slider round"></span>
+            </label>
+          </div>
+          
+          <div class="camera-preview card">
+            <div class="camera-header">
+              <h3>Caméra / Surveillance rapide</h3>
+              <div class="camera-status">
+                <span class="status-dot"></span>
+                <span>Ouvert</span>
               </div>
             </div>
-
-            <aside class="card">
-              <h4 style="margin:0 0 8px 0">Alertes de mouvement</h4>
-              <div class="alerts-list">
-                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Salon — 12:35</div></div></div>
-                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Entrée — 08:12</div></div></div>
-                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Garage — 02:11</div></div></div>
+            <div class="camera-feed">
+              <div class="camera-placeholder">
+                <i class="fas fa-video"></i>
+                <p>Vidéo en direct</p>
               </div>
-            </aside>
+            </div>
+            <div class="camera-actions">
+              <button class="btn btn-secondary">
+                <i class="fas fa-image"></i>
+                Voir l'image
+              </button>
+              <button class="btn btn-primary">
+                <i class="fas fa-expand"></i>
+                Afficher en plein écran
+              </button>
+            </div>
+          </div>
+          
+          <div class="alerts-container">
+            <h3>Alertes de mouvement</h3>
+            <div class="alerts-list">
+              <div class="alert-item">
+                <div class="alert-icon">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="alert-content">
+                  <div class="alert-title">Mouvement détecté</div>
+                  <div class="alert-time">12:35</div>
+                </div>
+              </div>
+              <div class="alert-item">
+                <div class="alert-icon">
+                  <i class="fas fa-door-open"></i>
+                </div>
+                <div class="alert-content">
+                  <div class="alert-title">Mouvement de porte</div>
+                  <div class="alert-time">12:30</div>
+                </div>
+              </div>
+            </div>
+            <div class="mode-option">
+              <div>
+                <h4>Activer Mode Absence</h4>
+                <p>Ferme toutes les portes, active la surveillance</p>
+              </div>
+              <label class="switch">
+                <input type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </div>
           </div>
         </div>
 
