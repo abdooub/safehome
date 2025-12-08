@@ -97,9 +97,71 @@
         </div>
         <!-- Dashboard PAGE -->
         <div id="page-dashboard" class="page active">
-          <div class="dash-hero">
-            <div class="login-form card">
-              <h3>Se connecter</h3>
+          <div class="dashboard-content">
+            <div class="card">
+              <h3>Contrôle des appareils</h3>
+              <div class="device-controls">
+                <div class="device-item">
+                  <div class="device-info">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Lumière Salon</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="light-livingroom-switch">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="device-item">
+                  <div class="device-info">
+                    <i class="fas fa-tv"></i>
+                    <span>Télévision</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="tv-switch">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="device-item">
+                  <div class="device-info">
+                    <i class="fas fa-thermometer-half"></i>
+                    <span>Thermostat</span>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="thermostat-switch">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Modes</h3>
+              <div class="mode-options">
+                <div class="mode-option">
+                  <i class="fas fa-moon"></i>
+                  <div>
+                    <h4>Mode Nuit</h4>
+                    <p>Activez le mode nuit pour toutes les pièces</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="night-mode-switch" class="mode-toggle" data-mode="night">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="mode-option">
+                  <i class="fas fa-home"></i>
+                  <div>
+                    <h4>Mode Maison</h4>
+                    <p>Activez le mode maison complète</p>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="home-mode-switch" class="mode-toggle" data-mode="home">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
               <div class="field">
                 <label>Email / Nom d'utilisateur</label>
                 <input type="text" placeholder="votre@email.com">
