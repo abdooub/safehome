@@ -3,17 +3,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>SafeHome — Maquette (SPA)</title>
+  <title>SafeHome — SPA (Frontend complet)</title>
   <style>
-    /* ---------- THEME / VARIABLES ---------- */
     :root{
-      --bg: #e9f0f6;                /* page background (soft blue) */
-      --panel: #ffffff;             /* cards background */
-      --muted: #6b7280;             /* grey text */
+      --bg: #e9f0f6;
+      --panel: #ffffff;
+      --muted: #6b7280;
       --surface: #f3f7fb;
-      --primary: #1976d2;           /* main blue */
+      --primary: #1976d2;
       --primary-600: #0f62c9;
-      --accent: #0b9d58;            /* green accent if needed */
+      --accent: #0b9d58;
       --shadow-1: 0 10px 30px rgba(13,38,59,0.08);
       --shadow-2: 0 6px 18px rgba(15,23,42,0.06);
       --radius-lg: 12px;
@@ -21,9 +20,17 @@
       --gap: 18px;
       --max-width: 1180px;
       --font-sans: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      --danger: #ef4444;
+    }
+    [data-theme="dark"]{
+      --bg:#0f1724;
+      --panel:#0b1220;
+      --surface:#071122;
+      --muted:#9aa6b2;
+      --primary:#4aa3ff;
+      color: #e6eef6;
     }
 
-    /* ---------- RESET & BASE ---------- */
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -33,116 +40,57 @@
       color:#0f1724;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
-      padding:40px;
+      padding:24px;
+      transition:background .18s,color .18s;
     }
+    [data-theme="dark"] body{ transition:background .18s,color .18s; }
+
     a{color:inherit;text-decoration:none}
-    img{max-width:100%;display:block}
-
-    /* ---------- APP WRAPPER ---------- */
-    .wrap{
-      max-width:var(--max-width);
-      margin:0 auto;
-      display:grid;
-      grid-template-columns: 240px 1fr;
-      gap:var(--gap);
-      align-items:start;
-    }
-
-    /* ---------- SIDEBAR ---------- */
-    .sidebar{
-      background:var(--panel);
-      border-radius:var(--radius-lg);
-      padding:22px;
-      box-shadow:var(--shadow-1);
-      height:calc(100vh - 80px);
-      display:flex;
-      flex-direction:column;
-      gap:14px;
-    }
-    .brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
-    .brand .logo{
-      width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#58a2ff);display:grid;place-items:center;color:white;font-weight:700;font-size:16px;box-shadow:0 6px 18px rgba(25,118,210,0.14)
-    }
+    .wrap{max-width:var(--max-width);margin:0 auto;display:grid;grid-template-columns:240px 1fr;gap:var(--gap)}
+    .sidebar{background:var(--panel);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-1);height:calc(100vh - 48px);display:flex;flex-direction:column}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--primary),#58a2ff);display:grid;place-items:center;color:white;font-weight:700}
     .brand h1{font-size:14px;margin:0}
-    .menu{flex:1;display:flex;flex-direction:column;gap:6px;padding-top:6px}
-    .menu a{
-      display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:#294150;
-      transition:all .18s;
-    }
-    .menu a .ico{width:34px;height:34;border-radius:8px;background:var(--surface);display:grid;place-items:center;color:var(--muted)}
-    .menu a:hover{background:linear-gradient(90deg, rgba(25,118,210,0.04), rgba(11,157,88,0.02))}
-    .menu a.active{background:linear-gradient(90deg, rgba(25,118,210,0.07), rgba(11,157,88,0.02));box-shadow:var(--shadow-2)}
-    .sidebar .logout{margin-top:auto}
-    .sidebar .logout button{background:transparent;border:0;color:var(--primary);padding:10px;border-radius:8px;cursor:pointer}
+    .menu{flex:1;display:flex;flex-direction:column;margin-top:16px;gap:6px}
+    .menu a{display:flex;align-items:center;gap:12px;padding:10px;border-radius:8px;color:var(--muted)}
+    .menu a .ico{width:34px;height:34;border-radius:8px;background:var(--surface);display:grid;place-items:center}
+    .menu a.active{background:linear-gradient(90deg, rgba(25,118,210,0.07), rgba(11,157,88,0.02));color:var(--primary)}
+    .logout{margin-top:auto}
+    .logout button{background:transparent;border:0;color:var(--primary);padding:10px;border-radius:8px;cursor:pointer}
 
-    /* ---------- MAIN AREA ---------- */
-    .main{
-      display:flex;
-      flex-direction:column;
-      gap:var(--gap);
-    }
-    header.top{
-      display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-radius:var(--radius-lg);
-      background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.98));
-      box-shadow:var(--shadow-2);
-      border:1px solid rgba(20,44,80,0.02);
-    }
+    .main{display:flex;flex-direction:column;gap:var(--gap)}
+    header.top{display:flex;align-items:center;justify-content:space-between;padding:14px;border-radius:var(--radius-lg);background:var(--panel);box-shadow:var(--shadow-2)}
     .page-title{font-size:18px;font-weight:700}
     .top-right{display:flex;align-items:center;gap:12px}
-    .userbox{display:flex;align-items:center;gap:12px}
-    .avatar{width:40px;height:40px;border-radius:50%;background:#f6fbff;border:2px solid rgba(25,118,210,0.12);display:grid;place-items:center;font-weight:700;color:var(--primary)}
-    .dropdown{position:relative}
-    .dropdown-menu{position:absolute;right:0;top:56px;background:var(--panel);box-shadow:var(--shadow-2);padding:8px;border-radius:10px;min-width:180px;display:none}
+    .avatar{width:40px;height:40px;border-radius:50%;background:#f6fbff;border:2px solid rgba(25,118,210,0.12);display:grid;place-items:center;font-weight:700;color:var(--primary);cursor:pointer}
+    .dropdown-menu{position:absolute;right:12px;top:64px;background:var(--panel);box-shadow:var(--shadow-2);padding:8px;border-radius:8px;min-width:160px;display:none}
     .dropdown.open .dropdown-menu{display:block}
-    .dropdown-menu a{display:block;padding:8px;border-radius:8px;color:#21343e}
+    .dropdown-menu a{display:block;padding:8px;border-radius:6px;color:var(--muted)}
 
-    /* ---------- GRID & CARDS ---------- */
-    .content{
-      display:grid;
-      gap:var(--gap);
-      grid-template-columns: 1fr;
-    }
-    .card{
-      background:var(--panel);
-      border-radius:var(--radius-md);
-      padding:18px;
-      box-shadow:var(--shadow-2);
-      border:1px solid rgba(15,23,42,0.03);
-    }
+    .content{display:grid;gap:var(--gap)}
+    .card{background:var(--panel);border-radius:var(--radius-md);padding:14px;box-shadow:var(--shadow-2);border:1px solid rgba(15,23,42,0.03)}
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;align-items:center}
+    .space{flex:1}
 
-    /* dashboard top area */
-    .dash-hero{display:flex;gap:18px;align-items:center;justify-content:space-between}
-    .hero-left{flex:1}
-    .welcome{font-size:20px;font-weight:700;margin:0}
-    .subtitle{color:var(--muted);margin-top:6px;margin-bottom:12px}
-    .login-form{max-width:480px}
-    .field{display:flex;flex-direction:column;margin-bottom:10px}
-    .field label{font-size:13px;color:var(--muted);margin-bottom:8px}
-    input[type=text], input[type=password], select{
-      padding:12px;border-radius:8px;border:1px solid #e6eef6;background:linear-gradient(180deg,#fff,#fbfdff);font-size:14px
+    input[type=text], input[type=password], select, input[type=date]{
+      padding:10px;border-radius:8px;border:1px solid #e6eef6;background:linear-gradient(180deg,#fff,#fbfdff);font-size:14px;width:100%;
     }
-    .btn{padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
-    .btn-primary{background:var(--primary);color:white;box-shadow:0 6px 18px rgba(25,118,210,0.12)}
-    .link-small{font-size:13px;color:var(--muted);display:inline-block;margin-top:8px}
+    button.btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer}
+    .btn-primary{background:var(--primary);color:#fff}
+    .btn-ghost{background:transparent;border:1px solid rgba(15,23,42,0.04)}
+    .btn-danger{background:var(--danger);color:#fff}
 
-    /* summary cards */
-    .cards-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
-    .summary-card{padding:14px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+    .cards-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+    .summary-card{padding:12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
     .small-num{font-size:20px;font-weight:800;color:var(--primary-600)}
 
-    /* camera card */
-    .camera-wrap{display:grid;grid-template-columns:1fr 300px;gap:12px}
     .camera{height:220px;border-radius:10px;background:linear-gradient(180deg,#000,#122);color:#fff;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
     .camera .tag{position:absolute;left:12px;top:12px;background:rgba(0,0,0,0.34);padding:6px 8px;border-radius:8px;font-size:13px}
     .camera .status{position:absolute;right:12px;top:12px;padding:6px 10px;border-radius:8px;font-weight:600;background:rgba(255,255,255,0.06)}
     .camera .status.green{color:#00c853;background:rgba(0,200,83,0.08)}
     .camera .status.red{color:#ff3b30;background:rgba(255,59,48,0.08)}
 
-    /* right small panel */
-    .alerts-list{display:flex;flex-direction:column;gap:8px}
-    .alert-item{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:8px;background:#fff;border:1px solid rgba(15,23,42,0.03)}
-
-    /* control page devices */
     .devices-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
     .device{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:8px;border:1px solid rgba(15,23,42,0.03);background:linear-gradient(180deg,#fff,#fbfdff)}
     .device .meta{display:flex;flex-direction:column}
@@ -153,47 +101,42 @@
     .switch.on{background:linear-gradient(90deg,var(--primary),#58a2ff)}
     .switch.on .knob{left:23px}
 
-    /* modes */
     .modes-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .mode-card{padding:20px;border-radius:10px;display:flex;flex-direction:column;gap:12px;min-height:140px}
     .badge{display:inline-block;padding:6px 10px;border-radius:20px;background:#f1f5f9;color:var(--muted);font-weight:600}
 
-    /* history table */
-    .table{overflow:auto}
     table{width:100%;border-collapse:collapse}
     th,td{padding:12px;border-bottom:1px solid #f1f5f9;text-align:left;font-size:14px}
     th{color:var(--muted);font-weight:600;font-size:13px}
 
-    /* profile form */
     .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .profile-grid .card{padding:16px}
+    .small{font-size:13px;color:var(--muted)}
 
-    /* responsive */
     @media (max-width:980px){
-      .wrap{grid-template-columns: 1fr; padding: 10px}
-      .sidebar{display:none;position:fixed;left:10px;top:10px;z-index:90}
-      .camera-wrap{grid-template-columns:1fr}
+      .wrap{grid-template-columns:1fr;padding:8px}
+      .sidebar{display:none}
       .cards-row{grid-template-columns:repeat(2,1fr)}
-      .modes-row{grid-template-columns:1fr}
       .devices-grid{grid-template-columns:1fr}
+      .modes-row{grid-template-columns:1fr}
     }
 
-    /* small helpers */
-    .muted{color:var(--muted)}
-    .row{display:flex;gap:12px;align-items:center}
-    .space{flex:1}
-    .text-right{text-align:right}
+    /* tiny helpers */
+    .center{text-align:center}
     .p-sm{padding:8px}
   </style>
 </head>
 <body>
-  <div class="wrap">
+
+  <div class="wrap" id="app">
 
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="brand">
-        <img src="./logo.jpeg" alt="SafeHome Logo" class="logo-img" onerror="this.src='data:image/svg+xml;charset=UTF-8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2255%25%22 font-family=%22Arial%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22%23999%22>SH</text></svg>'">
-        <span>SafeHome</span>
+        <div class="logo">SH</div>
+        <div>
+          <h1>SafeHome</h1>
+          <div class="small muted">Smart Home</div>
+        </div>
       </div>
 
       <nav class="menu" id="main-nav">
@@ -215,197 +158,130 @@
       <header class="top">
         <div>
           <div class="page-title" id="page-title">Dashboard</div>
-          <div class="muted" style="font-size:13px">Résumé de votre maison</div>
+          <div class="muted small">Résumé de votre maison</div>
         </div>
         <div class="top-right">
-          <div class="userbox">
-            <div style="text-align:right;font-size:13px;color:var(--muted)">Bonjour, <strong id="user-name">Rania</strong></div>
-            <div class="dropdown" id="user-drop">
-              <div class="avatar" onclick="document.getElementById('user-drop').classList.toggle('open')">R.A</div>
-              <div class="dropdown-menu">
-                <a href="#" data-page="profil">Profil</a>
-                <a href="#" id="settings">Paramètres</a>
-                <a href="#" id="logout">Déconnexion</a>
-              </div>
+          <div style="font-size:13px;color:var(--muted);text-align:right">Bonjour, <strong id="user-name">Invité</strong></div>
+          <div class="dropdown" id="user-drop">
+            <div class="avatar" id="avatar">R</div>
+            <div class="dropdown-menu" id="user-menu">
+              <a href="#" data-page="profil" class="menu-link">Profil</a>
+              <a href="#" id="toggle-theme">Thème Clair/Sombre</a>
+              <a href="#" id="logout">Déconnexion</a>
             </div>
           </div>
         </div>
       </header>
 
       <section class="content">
-        <!-- Dashboard PAGE -->
+
+        <!-- DASHBOARD -->
         <div id="page-dashboard" class="card page">
-          <div class="dash-hero">
-            <div class="hero-left">
-              <h2 class="welcome">Bonjour, <span id="greet-name">Rania</span></h2>
-              <div class="subtitle">Résumé de votre maison</div>
+          <div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">
+            <div style="flex:1;min-width:320px">
+              <h2 style="margin:0 0 6px 0">Bonjour, <span id="greet-name">Rania</span></h2>
+              <div class="muted small">Résumé rapide</div>
 
-              <div class="login-form card" style="margin-top:12px;padding:14px">
-                <div class="field">
-                  <label>Email / Nom d'utilisateur</label>
-                  <input type="text" placeholder="rania@example.com">
+              <div style="margin-top:12px" class="card">
+                <h4 style="margin:0 0 10px 0">Connexion rapide (local)</h4>
+                <div class="field"><label class="small">Email / Nom d'utilisateur</label><input id="login-user" type="text" placeholder="rania@example.com"></div>
+                <div class="field"><label class="small">Mot de passe</label><input id="login-pass" type="password" placeholder="••••••"></div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button class="btn btn-primary" id="do-login">Se connecter</button>
+                  <button class="btn btn-ghost" id="demo-login">Demo</button>
                 </div>
-                <div class="field">
-                  <label>Mot de passe</label>
-                  <input type="password" placeholder="••••••">
-                </div>
-                <div style="display:flex;gap:8px;align-items:center">
-                  <button class="btn btn-primary">Se connecter</button>
-                  <a class="link-small" href="#">Créer un compte</a>
-                </div>
+                <div style="margin-top:8px" class="small muted">Se souvenir? (stocké localement uniquement)</div>
               </div>
             </div>
 
-            <div style="width:340px">
+            <div style="width:360px">
               <div class="cards-row">
-                <div class="card summary-card">
-                  <div>
-                    <div class="muted">Appareils allumés</div>
-                    <div class="small-num">3</div>
-                  </div>
-                </div>
-                <div class="card summary-card">
-                  <div>
-                    <div class="muted">Portes ouvertes</div>
-                    <div class="small-num" style="color:#ff7a7a">1</div>
-                  </div>
-                </div>
-                <div class="card summary-card">
-                  <div>
-                    <div class="muted">Alertes aujourd'hui</div>
-                    <div class="small-num" style="color:#ff9b42">2</div>
-                  </div>
-                </div>
-                <div class="card summary-card">
-                  <div>
-                    <div class="muted">Mode actif</div>
-                    <div class="small-num">Aucun</div>
-                  </div>
-                </div>
+                <div class="card summary-card"><div class="muted">Appareils allumés</div><div class="small-num" id="count-on">0</div></div>
+                <div class="card summary-card"><div class="muted">Portes ouvertes</div><div class="small-num" id="count-doors">0</div></div>
+                <div class="card summary-card"><div class="muted">Alertes aujourd'hui</div><div class="small-num" id="count-alerts">0</div></div>
+                <div class="card summary-card"><div class="muted">Mode actif</div><div class="small-num" id="count-mode">Aucun</div></div>
               </div>
-            </div>
-          </div>
 
-          <div style="margin-top:18px" class="camera-wrap">
-            <div class="card">
-              <h4 style="margin:0 0 8px 0">Caméra / Surveillance rapide</h4>
-              <div class="camera" id="mini-camera">
-                <div class="tag">En direct</div>
-                <div class="status green" id="mini-status">● Normal</div>
-                <div style="opacity:0.12;font-size:120px">📷</div>
+              <div style="margin-top:12px" class="card">
+                <h4 style="margin:0 0 8px 0">Caméra / Surveillance rapide</h4>
+                <div class="camera" id="mini-camera">
+                  <div class="tag">En direct</div>
+                  <div class="status green" id="mini-status">● Normal</div>
+                  <div style="opacity:0.08;font-size:120px">📷</div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:10px">
+                  <button class="btn btn-ghost" onclick="openPage('surveillance')">Voir Surveillance</button>
+                  <button class="btn btn-primary" onclick="openPage('surveillance')">Ouvrir Surveillance</button>
+                </div>
               </div>
-              <div style="display:flex;gap:10px;margin-top:12px">
-                <button class="btn btn-ghost" onclick="openPage('surveillance')">Voir la page Surveillance</button>
-                <button class="btn btn-primary" onclick="openPage('surveillance')">Ouvrir Surveillance</button>
-              </div>
-            </div>
 
-            <aside class="card">
-              <h4 style="margin:0 0 8px 0">Alertes de mouvement</h4>
-              <div class="alerts-list">
-                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Salon — 12:35</div></div></div>
-                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Entrée — 08:12</div></div></div>
-                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Garage — 02:11</div></div></div>
-              </div>
-            </aside>
+            </div>
           </div>
         </div>
 
-        <!-- SURVEILLANCE PAGE -->
+        <!-- SURVEILLANCE -->
         <div id="page-surveillance" class="card page" style="display:none">
           <h3>Surveillance</h3>
-          <div class="muted" style="margin-bottom:12px">Caméra en direct (simulation)</div>
-          <div class="camera" style="height:360px;position:relative">
+          <div class="muted" style="margin-bottom:8px">Simulation caméra</div>
+          <div class="camera" id="main-camera" style="height:380px">
             <div class="tag">En direct</div>
             <div class="status green" id="cam-status">● Normal</div>
-            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px">Image / Simulation vidéo</div>
+            <div style="font-size:18px;color:#fff;opacity:0.9">Image simulée / Vidéo</div>
           </div>
-          <div style="display:flex;gap:10px;margin-top:12px;align-items:center">
-            <button class="btn">Pause</button>
-            <button class="btn">Plein écran</button>
-            <div style="margin-left:auto;color:var(--muted)">Dernière alerte : —</div>
+          <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+            <button class="btn" id="cam-pause">Pause</button>
+            <button class="btn" id="cam-full">Plein écran</button>
+            <div style="margin-left:auto" class="muted">Dernière alerte : <span id="last-alert">—</span></div>
           </div>
 
           <div style="margin-top:12px;display:grid;grid-template-columns:1fr 320px;gap:12px">
             <div class="card">
               <h4 style="margin-top:0">Alertes de mouvement</h4>
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <div class="alert-item">⚠️ <span style="margin-left:8px">Mouvement détecté — Salon — 12:35</span></div>
-                <div class="alert-item">⚠️ <span style="margin-left:8px">Mouvement détecté — Entrée — 08:12</span></div>
-                <div class="alert-item">⚠️ <span style="margin-left:8px">Mouvement détecté — Garage — 02:11</span></div>
-              </div>
+              <div id="alerts-list"></div>
             </div>
 
             <div class="card">
               <h4 style="margin-top:0">Filtres</h4>
               <div style="display:flex;gap:8px;margin-top:8px">
-                <button class="btn btn-ghost">Aujourd'hui</button>
-                <button class="btn btn-ghost">7 jours</button>
-                <button class="btn btn-ghost">Tout</button>
+                <button class="btn btn-ghost" onclick="filterAlerts('today')">Aujourd'hui</button>
+                <button class="btn btn-ghost" onclick="filterAlerts('7')">7 jours</button>
+                <button class="btn btn-ghost" onclick="filterAlerts('all')">Tout</button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- CONTROLE PAGE -->
+        <!-- CONTROLE -->
         <div id="page-controle" class="card page" style="display:none">
           <h3>Contrôle des appareils</h3>
-          <div class="muted">Gérez l'éclairage, multimédia et chauffage</div>
-
-          <div style="margin-top:12px" class="devices-grid">
-            <div class="card">
-              <h4>Éclairage</h4>
-              <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
-                <div class="device">
-                  <div class="meta"><div class="name">Salon</div><div class="small">Dernière action : 22:30</div></div>
-                  <div class="switch on" onclick="toggleSwitch(this)"><div class="knob"></div></div>
-                </div>
-                <div class="device">
-                  <div class="meta"><div class="name">Cuisine</div><div class="small">Dernière action : 21:10</div></div>
-                  <div class="switch" onclick="toggleSwitch(this)"><div class="knob"></div></div>
-                </div>
-                <div class="device">
-                  <div class="meta"><div class="name">Chambre</div><div class="small">Dernière action : 06:02</div></div>
-                  <div class="switch" onclick="toggleSwitch(this)"><div class="knob"></div></div>
-                </div>
-              </div>
+          <div class="muted">Gère l'éclairage, multimédia, chauffage</div>
+          <div style="margin-top:12px" class="card">
+            <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+              <div><strong>Ajouter appareil</strong></div>
+              <input id="new-device-name" type="text" placeholder="Nom (ex: Salon)" style="width:220px">
+              <select id="new-device-type"><option>Light</option><option>TV</option><option>Heater</option><option>Door</option></select>
+              <button class="btn btn-primary" id="add-device">Ajouter</button>
+              <div style="flex:1"></div>
+              <button class="btn btn-danger" id="all-off">Éteindre tous</button>
             </div>
+          </div>
 
-            <div class="card">
-              <h4>Multimédia & Chauffage</h4>
-              <div style="margin-top:8px;display:flex;flex-direction:column;gap:8px">
-                <div class="device">
-                  <div class="meta"><div class="name">TV</div><div class="small">Dernière action : 11:10</div></div>
-                  <div class="switch on" onclick="toggleSwitch(this)"><div class="knob"></div></div>
-                </div>
-                <div class="device">
-                  <div class="meta"><div class="name">Son</div><div class="small">Dernière action : 10:00</div></div>
-                  <div class="switch" onclick="toggleSwitch(this)"><div class="knob"></div></div>
-                </div>
-                <div style="margin-top:10px">
-                  <div class="device">
-                    <div class="meta"><div class="name">Chauffage électrique</div><div class="small">Temp: 21°C</div></div>
-                    <div class="switch on" onclick="toggleSwitch(this)"><div class="knob"></div></div>
-                  </div>
-                </div>
-              </div>
-              <div style="margin-top:12px"><button class="btn btn-primary" onclick="turnAllOff()">Éteindre tous les appareils</button></div>
-            </div>
+          <div style="margin-top:12px" class="devices-grid card" id="devices-container">
+            <!-- devices rendered here -->
           </div>
         </div>
 
-        <!-- MODES PAGE -->
+        <!-- MODES -->
         <div id="page-modes" class="card page" style="display:none">
           <h3>Modes (Nuit & Absence)</h3>
           <div class="muted">Activer rapidement un mode global</div>
-
           <div style="margin-top:12px" class="modes-row">
             <div class="mode-card card">
               <div style="display:flex;gap:12px;align-items:center">
                 <div style="font-size:28px">🌙</div>
                 <div>
                   <div style="font-weight:700">Mode Nuit</div>
-                  <div class="muted" style="font-size:13px">Éteint les lumières · Ferme les portes · Active la caméra</div>
+                  <div class="muted small">Éteint lumières · Ferme portes · Active caméras</div>
                 </div>
               </div>
               <div style="margin-top:auto;display:flex;gap:8px;align-items:center">
@@ -420,7 +296,7 @@
                 <div style="font-size:28px">🏠</div>
                 <div>
                   <div style="font-weight:700">Mode Absence</div>
-                  <div class="muted" style="font-size:13px">Ferme toutes les portes · Active la surveillance · Éteint les lumières</div>
+                  <div class="muted small">Ferme portes · Active surveillance · Éteint lumières</div>
                 </div>
               </div>
               <div style="margin-top:auto;display:flex;gap:8px;align-items:center">
@@ -433,70 +309,61 @@
 
           <div style="margin-top:12px" class="card">
             <h4 style="margin-top:0">Historique rapide des modes</h4>
-            <ul style="margin:0;padding-left:18px">
-              <li>Mode Nuit activé — Hier 23:15</li>
-              <li>Mode Absence désactivé — Aujourd'hui 08:05</li>
-            </ul>
+            <ul id="modes-history"></ul>
           </div>
         </div>
 
-        <!-- HISTORIQUE PAGE -->
+        <!-- HISTORIQUE -->
         <div id="page-historique" class="card page" style="display:none">
           <h3>Historique des activités</h3>
           <div style="margin-top:12px" class="card">
             <div style="display:flex;gap:8px;align-items:center">
-              <select><option>Tous</option><option>Appareils</option><option>Portes</option><option>Alertes</option><option>Modes</option></select>
-              <input type="date">
-              <button class="btn btn-ghost">Filtrer</button>
+              <select id="filter-type"><option value="all">Tous</option><option value="device">Appareils</option><option value="door">Porte</option><option value="alert">Alerte</option><option value="mode">Mode</option></select>
+              <input id="filter-date" type="date">
+              <button class="btn btn-ghost" id="btn-filter">Filtrer</button>
               <div style="flex:1"></div>
-              <button class="btn btn-primary">Exporter</button>
+              <button class="btn btn-primary" id="export-csv">Exporter CSV</button>
             </div>
 
             <div style="margin-top:12px" class="table">
-              <table>
+              <table id="history-table">
                 <thead><tr><th>Date & heure</th><th>Type</th><th>Détail</th><th>Utilisateur</th></tr></thead>
-                <tbody>
-                  <tr><td>12/12 21:15</td><td>Appareil</td><td>Lumière salon éteinte</td><td>Rania</td></tr>
-                  <tr><td>12/12 20:45</td><td>Mode</td><td>Mode Nuit activé</td><td>Safae</td></tr>
-                  <tr><td>12/12 18:00</td><td>Alerte</td><td>Mouvement détecté – Entrée</td><td>Système</td></tr>
-                  <tr><td>12/12 17:30</td><td>Porte</td><td>Porte principale fermée</td><td>Reda</td></tr>
-                </tbody>
+                <tbody></tbody>
               </table>
             </div>
-
           </div>
         </div>
 
-        <!-- PROFIL PAGE -->
+        <!-- PROFIL -->
         <div id="page-profil" class="page" style="display:none">
           <div class="profile-grid">
             <div class="card">
               <h3>Informations personnelles</h3>
               <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                <div class="field"><label>Nom complet</label><input type="text" value="Rania Al-Farsi"></div>
-                <div class="field"><label>Email</label><input type="text" value="rania.alfarsi@email.com"></div>
-                <div class="field"><label>Numéro de téléphone</label><input type="text" value="+33 6 12 34 56 78"></div>
-                <div class="field"><label>Adresse</label><input type="text" value="123 Rue de Paix, Paris, France"></div>
+                <div class="field"><label class="small">Nom complet</label><input id="profile-name" type="text" value=""></div>
+                <div class="field"><label class="small">Email</label><input id="profile-email" type="text" value=""></div>
+                <div class="field"><label class="small">Numéro de téléphone</label><input id="profile-phone" type="text" value=""></div>
+                <div class="field"><label class="small">Adresse</label><input id="profile-address" type="text" value=""></div>
               </div>
-              <div style="margin-top:12px"><button class="btn btn-primary">Enregistrer les modifications</button></div>
+              <div style="margin-top:12px"><button class="btn btn-primary" id="save-profile">Enregistrer les modifications</button></div>
             </div>
 
             <div class="card">
               <h3>Sécurité du compte</h3>
               <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
-                <input type="password" placeholder="Ancien mot de passe">
-                <input type="password" placeholder="Nouveau mot de passe">
-                <input type="password" placeholder="Confirmer le mot de passe">
-                <button class="btn btn-primary">Mettre à jour le mot de passe</button>
+                <input id="old-pass" type="password" placeholder="Ancien mot de passe">
+                <input id="new-pass" type="password" placeholder="Nouveau mot de passe">
+                <input id="confirm-pass" type="password" placeholder="Confirmer le mot de passe">
+                <button class="btn btn-primary" id="change-pass">Mettre à jour le mot de passe</button>
               </div>
 
               <div style="margin-top:18px">
                 <h4>Préférences</h4>
                 <div style="display:flex;gap:8px;align-items:center;margin-top:8px">
-                  <select><option>Français</option><option>Anglais</option></select>
+                  <select id="lang-select"><option>Français</option><option>Anglais</option></select>
                   <div style="flex:1"></div>
-                  <label style="display:flex;align-items:center;gap:8px"><input type="radio" name="theme" checked> Clair</label>
-                  <label style="display:flex;align-items:center;gap:8px"><input type="radio" name="theme"> Sombre</label>
+                  <label style="display:flex;align-items:center;gap:8px"><input type="radio" name="theme" value="light"> Clair</label>
+                  <label style="display:flex;align-items:center;gap:8px"><input type="radio" name="theme" value="dark"> Sombre</label>
                 </div>
               </div>
             </div>
@@ -507,81 +374,400 @@
     </main>
   </div>
 
-  <script>
-    // ---------- SIMPLE SPA NAV ----------
-    function openPage(page){
-      // hide all pages
-      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
-      // show selected
-      const el = document.getElementById('page-' + page);
-      if(el) el.style.display = 'block';
-      // update nav active
-      document.querySelectorAll('#main-nav a').forEach(a => a.classList.remove('active'));
-      const nav = document.querySelector('#main-nav a[data-page="'+page+'"]');
-      if(nav) nav.classList.add('active');
-      // update title
-      document.getElementById('page-title').textContent = page.charAt(0).toUpperCase() + page.slice(1);
-      // close user dropdown
-      document.getElementById('user-drop').classList.remove('open');
-      // scroll top of main content
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
+<script>
+/*
+  Frontend-only logic:
+  - localStorage keys:
+      safe_user, safe_devices, safe_modes, safe_history, safe_profile, safe_theme
+  - features:
+      login (local), persistent devices, add device, toggle device, modes, history push,
+      profile save, export CSV, filters, theme toggle
+*/
 
-    // nav links
-    document.querySelectorAll('#main-nav a').forEach(a=>{
-      a.addEventListener('click', function(e){
-        e.preventDefault();
-        openPage(this.dataset.page);
-      })
+// ---------- Utilities ----------
+function nowISO(){ return new Date().toISOString(); }
+function formatLocal(iso){
+  const d=new Date(iso);
+  return d.toLocaleString();
+}
+function uid(prefix='id'){ return prefix + '_' + Math.random().toString(36).substr(2,9); }
+function save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+function load(key, fallback){ const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+
+// ---------- Initial default state ----------
+const DEFAULT_DEVICES = [
+  { id: uid('dev'), name:'Salon', type:'Light', on:true, last:'2025-12-06T12:35:00Z' },
+  { id: uid('dev'), name:'Cuisine', type:'Light', on:false, last:'2025-12-06T08:21:00Z' },
+  { id: uid('dev'), name:'Chambre', type:'Light', on:false, last:'2025-12-06T06:02:00Z' },
+  { id: uid('dev'), name:'TV', type:'TV', on:true, last:'2025-12-06T11:10:00Z' },
+  { id: uid('dev'), name:'Porte principale', type:'Door', on:false, last:'2025-12-06T11:12:00Z' }
+];
+
+function initState(){
+  if(!localStorage.getItem('safe_devices')) save('safe_devices', DEFAULT_DEVICES);
+  if(!localStorage.getItem('safe_modes')) save('safe_modes', { night:false, away:false, history:[] });
+  if(!localStorage.getItem('safe_history')) save('safe_history', []);
+  if(!localStorage.getItem('safe_profile')) save('safe_profile', { name:'Rania Al-Farsi', email:'rania.alfarsi@email.com', phone:'+33 6 12 34 56 78', address:'123 Rue de Paix' });
+  if(!localStorage.getItem('safe_user')) save('safe_user', { username:'rania', password:'1234' }); // demo user
+  if(!localStorage.getItem('safe_theme')) save('safe_theme', 'light');
+}
+initState();
+
+// ---------- Render helpers ----------
+function renderSummary(){
+  const devices = load('safe_devices', []);
+  const alerts = load('safe_history', []).filter(h=>h.type==='alert');
+  const doorsOpen = devices.filter(d=>d.type==='Door' && d.on).length;
+  const onCount = devices.filter(d=>d.on).length;
+  const modes = load('safe_modes', {night:false,away:false});
+  document.getElementById('count-on').textContent = onCount;
+  document.getElementById('count-doors').textContent = doorsOpen;
+  document.getElementById('count-alerts').textContent = alerts.filter(a => isToday(a.ts)).length;
+  document.getElementById('count-mode').textContent = modes.night ? 'Nuit' : (modes.away ? 'Absence' : 'Aucun');
+}
+
+function isToday(iso){
+  const d=new Date(iso); const now=new Date();
+  return d.getDate()===now.getDate() && d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear();
+}
+
+// ---------- Devices rendering & logic ----------
+function renderDevices(){
+  const container = document.getElementById('devices-container');
+  container.innerHTML = '';
+  const devices = load('safe_devices', []);
+  devices.forEach(dev=>{
+    const div = document.createElement('div');
+    div.className = 'device';
+    div.innerHTML = `
+      <div class="meta">
+        <div class="name">${escapeHtml(dev.name)} ${dev.type==='Door' ? '🚪' : ''}</div>
+        <div class="small">${dev.type} · Dernière action : ${dev.last ? formatLocal(dev.last) : '—'}</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn btn-ghost" data-id="${dev.id}" onclick="renameDevice('${dev.id}')">✎</button>
+        <div class="switch ${dev.on ? 'on' : ''}" data-id="${dev.id}" onclick="toggleDeviceById('${dev.id}', this)">
+          <div class="knob"></div>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+  renderSummary();
+}
+
+function toggleDeviceById(id, el){
+  const devices = load('safe_devices', []);
+  const idx = devices.findIndex(d=>d.id===id); if(idx<0) return;
+  devices[idx].on = !devices[idx].on;
+  devices[idx].last = nowISO();
+  save('safe_devices', devices);
+  // push history
+  pushHistory({
+    ts: nowISO(),
+    type: devices[idx].type==='Door' ? 'door' : 'device',
+    detail: `${devices[idx].name} ${devices[idx].on ? 'allumé' : 'éteint'}`,
+    user: getCurrentUserName()
+  });
+  renderDevices();
+}
+
+function toggleSwitch(el){
+  el.classList.toggle('on');
+}
+
+document.getElementById('add-device').addEventListener('click', ()=>{
+  const name = document.getElementById('new-device-name').value.trim();
+  const type = document.getElementById('new-device-type').value;
+  if(!name){ alert('Donne un nom à l\'appareil'); return; }
+  const devices = load('safe_devices', []);
+  const newDev = { id: uid('dev'), name, type, on:false, last: null };
+  devices.push(newDev); save('safe_devices', devices);
+  pushHistory({ ts: nowISO(), type:'device', detail:`Ajouté appareil ${name}`, user:getCurrentUserName() });
+  document.getElementById('new-device-name').value = '';
+  renderDevices();
+});
+
+// rename device (prompt simple)
+function renameDevice(id){
+  const devices = load('safe_devices', []);
+  const d = devices.find(x=>x.id===id);
+  if(!d) return;
+  const newName = prompt('Nouveau nom pour ' + d.name, d.name);
+  if(newName && newName.trim()!==''){
+    d.name = newName.trim(); d.last = nowISO();
+    save('safe_devices', devices);
+    pushHistory({ ts: nowISO(), type:'device', detail:`Renommé appareil en ${d.name}`, user:getCurrentUserName() });
+    renderDevices();
+  }
+}
+
+document.getElementById('all-off').addEventListener('click', ()=>{
+  const devices = load('safe_devices', []);
+  devices.forEach(d=>{ d.on = false; d.last = nowISO(); });
+  save('safe_devices', devices);
+  pushHistory({ ts: nowISO(), type:'device', detail:'Éteint tous les appareils', user:getCurrentUserName() });
+  renderDevices();
+});
+
+// ---------- Modes (night / away) ----------
+function toggleMode(mode){
+  const modes = load('safe_modes', {night:false,away:false,history:[]});
+  if(mode==='night'){ modes.night = !modes.night; pushModeHistory('Mode Nuit', modes.night); }
+  else { modes.away = !modes.away; pushModeHistory('Mode Absence', modes.away); }
+  save('safe_modes', modes);
+  // effect: if mode activated, modify devices (example: night -> turn off lights)
+  if(modes.night){
+    const devices = load('safe_devices', []);
+    devices.forEach(d=>{ if(d.type==='Light') { d.on=false; d.last=nowISO(); } });
+    save('safe_devices', devices);
+  }
+  renderDevices(); renderModes();
+}
+function pushModeHistory(name, active){
+  const modes = load('safe_modes', {night:false,away:false,history:[]});
+  modes.history = modes.history || [];
+  modes.history.unshift({ ts: nowISO(), name, active, user:getCurrentUserName() });
+  if(modes.history.length>20) modes.history.pop();
+  save('safe_modes', modes);
+  pushHistory({ ts: nowISO(), type:'mode', detail:`${name} ${active ? 'activé' : 'désactivé'}`, user:getCurrentUserName() });
+  renderModes();
+}
+function renderModes(){
+  const m = load('safe_modes', {night:false,away:false,history:[]});
+  document.getElementById('badge-night').textContent = m.night ? 'Actif' : 'Inactif';
+  document.getElementById('badge-away').textContent = m.away ? 'Actif' : 'Inactif';
+  const ul = document.getElementById('modes-history'); ul.innerHTML = '';
+  (m.history||[]).slice(0,6).forEach(h=>{
+    const li = document.createElement('li'); li.textContent = `${formatLocal(h.ts)} — ${h.name} — ${h.active ? 'Actif' : 'Inactif'}`; ul.appendChild(li);
+  });
+  renderSummary();
+}
+
+// ---------- HISTORY ----------
+function pushHistory(entry){
+  const hist = load('safe_history', []);
+  hist.unshift(entry);
+  if(hist.length>500) hist.pop();
+  save('safe_history', hist);
+  renderHistoryTable();
+  // if alert -> update alerts area
+  if(entry.type==='alert') renderAlerts();
+}
+
+function renderHistoryTable(filter={type:'all', date:null}){
+  const hist = load('safe_history', []);
+  const tbody = document.querySelector('#history-table tbody'); tbody.innerHTML = '';
+  hist.filter(h=>{
+    if(filter.type && filter.type!=='all' && h.type!==filter.type) return false;
+    if(filter.date){
+      const d = new Date(h.ts); const fd = new Date(filter.date);
+      if(d.getFullYear()!==fd.getFullYear() || d.getMonth()!==fd.getMonth() || d.getDate()!==fd.getDate()) return false;
+    }
+    return true;
+  }).forEach(h=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${formatLocal(h.ts)}</td><td>${escapeHtml(h.type)}</td><td>${escapeHtml(h.detail)}</td><td>${escapeHtml(h.user||'Système')}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// filter UI
+document.getElementById('btn-filter').addEventListener('click', ()=>{
+  const t = document.getElementById('filter-type').value;
+  const d = document.getElementById('filter-date').value || null;
+  renderHistoryTable({ type: t, date: d });
+});
+
+// export CSV
+document.getElementById('export-csv').addEventListener('click', ()=>{
+  const hist = load('safe_history', []);
+  if(hist.length===0){ alert('Aucune donnée à exporter'); return; }
+  const rows = [['Date','Type','Détail','Utilisateur']];
+  hist.forEach(h=> rows.push([formatLocal(h.ts), h.type, h.detail, h.user||'Système']));
+  const csv = rows.map(r=> r.map(c=> `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='safe_history.csv'; a.click(); URL.revokeObjectURL(url);
+});
+
+// ---------- Alerts (simulated) ----------
+function simulateAlert(detail='Mouvement détecté – Entrée'){
+  const entry = { ts: nowISO(), type:'alert', detail, user:'Système' };
+  pushHistory(entry);
+  // show small visual (simple)
+  alert('Alerte: ' + detail);
+}
+
+function renderAlerts(filter='all'){
+  const hist = load('safe_history', []);
+  const list = document.getElementById('alerts-list'); list.innerHTML = '';
+  hist.filter(h=>h.type==='alert').slice(0,20).forEach(a=>{
+    const div = document.createElement('div'); div.className = 'card'; div.style.marginBottom='8px';
+    div.innerHTML = `<strong>${formatLocal(a.ts)}</strong><div class="muted">${a.detail}</div>`;
+    list.appendChild(div);
+  });
+  document.getElementById('last-alert').textContent = (hist.find(h=>h.type==='alert') ? formatLocal(hist.find(h=>h.type==='alert').ts) : '—');
+}
+function filterAlerts(mode){
+  if(mode==='today'){
+    const hist = load('safe_history', []).filter(h=>h.type==='alert' && isToday(h.ts));
+    // render only these
+    const list = document.getElementById('alerts-list'); list.innerHTML='';
+    hist.forEach(a=>{
+      const div = document.createElement('div'); div.className='card'; div.style.marginBottom='8px';
+      div.innerHTML = `<strong>${formatLocal(a.ts)}</strong><div class="muted">${a.detail}</div>`;
+      list.appendChild(div);
     });
-    // dropdown menu links
-    document.querySelectorAll('.dropdown-menu a[data-page]').forEach(a=>{
-      a.addEventListener('click', function(e){ e.preventDefault(); openPage(this.dataset.page); });
-    });
+  } else renderAlerts();
+}
 
-    // show initial
-    openPage('dashboard');
+// ---------- PROFILE & AUTH (local) ----------
+function getCurrentUserName(){ const p=load('safe_profile', {}); return p.name || 'Utilisateur'; }
 
-    // ---------- SWITCHES ----------
-    function toggleSwitch(el){
-      el.classList.toggle('on');
-    }
+function renderProfile(){
+  const p = load('safe_profile', {});
+  document.getElementById('profile-name').value = p.name || '';
+  document.getElementById('profile-email').value = p.email || '';
+  document.getElementById('profile-phone').value = p.phone || '';
+  document.getElementById('profile-address').value = p.address || '';
+  document.getElementById('user-name').textContent = p.name ? p.name.split(' ')[0] : 'Invité';
+  document.getElementById('avatar').textContent = (p.name ? p.name.split(' ').map(x=>x[0]).slice(0,2).join('.') : 'R');
+  document.getElementById('greet-name').textContent = p.name ? p.name.split(' ')[0] : 'Invité';
+}
 
-    function turnAllOff(){
-      document.querySelectorAll('.switch').forEach(s => s.classList.remove('on'));
-      alert('Tous les appareils ont été éteints (simulation).');
-    }
+document.getElementById('save-profile').addEventListener('click', ()=>{
+  const p = {
+    name: document.getElementById('profile-name').value.trim(),
+    email: document.getElementById('profile-email').value.trim(),
+    phone: document.getElementById('profile-phone').value.trim(),
+    address: document.getElementById('profile-address').value.trim()
+  };
+  save('safe_profile', p);
+  pushHistory({ ts: nowISO(), type:'profile', detail:'Profil mis à jour', user:getCurrentUserName() });
+  renderProfile();
+  alert('Profil enregistré (local)');
+});
 
-    // ---------- MODES ----------
-    function toggleMode(mode){
-      if(mode === 'night'){
-        const b = document.getElementById('badge-night');
-        b.textContent = (b.textContent === 'Actif') ? 'Inactif' : 'Actif';
-        b.style.background = (b.textContent === 'Actif') ? 'linear-gradient(90deg,#e6ffef,#dff7ee)' : '#f1f5f9';
-      } else {
-        const b = document.getElementById('badge-away');
-        b.textContent = (b.textContent === 'Actif') ? 'Inactif' : 'Actif';
-        b.style.background = (b.textContent === 'Actif') ? 'linear-gradient(90deg,#e6ffef,#dff7ee)' : '#f1f5f9';
-      }
-    }
+// change password (local fake)
+document.getElementById('change-pass').addEventListener('click', ()=>{
+  const oldp = document.getElementById('old-pass').value;
+  const newp = document.getElementById('new-pass').value;
+  const conf = document.getElementById('confirm-pass').value;
+  const user = load('safe_user', { username:'rania', password:'1234' });
+  if(oldp !== user.password){ alert('Ancien mot de passe incorrect'); return; }
+  if(newp.length < 4){ alert('Mot de passe trop court'); return; }
+  if(newp !== conf){ alert('Confirmation différente'); return; }
+  user.password = newp; save('safe_user', user);
+  alert('Mot de passe changé (local)');
+  pushHistory({ ts: nowISO(), type:'profile', detail:'Mot de passe changé', user:getCurrentUserName() });
+  document.getElementById('old-pass').value = document.getElementById('new-pass').value = document.getElementById('confirm-pass').value = '';
+});
 
-    // logout / demo behavior
-    document.getElementById('btn-logout').addEventListener('click', ()=> alert('Déconnexion (simulation)'));
-    document.getElementById('logout').addEventListener('click', (e)=>{ e.preventDefault(); alert('Déconnexion (simulation)'); });
+// ---------- LOGIN (local) ----------
+document.getElementById('do-login').addEventListener('click', ()=>{
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const storedUser = load('safe_user', { username:'rania', password:'1234' });
+  if(u === storedUser.username && p === storedUser.password){
+    localStorage.setItem('safe_logged', '1');
+    alert('Connecté (local)');
+    renderAfterAuth();
+  } else {
+    alert('Identifiants incorrects (demo: rania / 1234)');
+  }
+});
+document.getElementById('demo-login').addEventListener('click', ()=>{
+  // demo: set current profile if not exists
+  localStorage.setItem('safe_logged', '1');
+  renderAfterAuth();
+});
+document.getElementById('btn-logout').addEventListener('click', ()=>{
+  localStorage.removeItem('safe_logged');
+  alert('Déconnecté (local)');
+  renderAfterAuth();
+});
+document.getElementById('logout').addEventListener('click', (e)=>{ e.preventDefault(); localStorage.removeItem('safe_logged'); renderAfterAuth(); });
 
-    // small keyboard shortcut for demo: press L to open login modal (not implemented modal, just alert)
-    window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase() === 'l'){ alert('Login demo (simulation)'); } });
+// show/hide dropdown
+document.getElementById('avatar').addEventListener('click', ()=> document.getElementById('user-drop').classList.toggle('open'));
 
-    // optional: responsive improvements (close sidebar on small screens)
-    function initResponsive(){
-      if(window.innerWidth < 980){
-        document.querySelector('.sidebar').style.display = 'none';
-      } else {
-        document.querySelector('.sidebar').style.display = 'flex';
-      }
-    }
-    window.addEventListener('resize', initResponsive);
-    initResponsive();
-  </script>
+// ---------- THEME ----------
+function applyTheme(){
+  const theme = load('safe_theme','light');
+  document.documentElement.setAttribute('data-theme', theme==='dark' ? 'dark' : 'light');
+  // set radio checked
+  Array.from(document.getElementsByName('theme')).forEach(r=> r.checked = (r.value === (theme==='dark' ? 'dark' : 'light')));
+}
+document.getElementById('toggle-theme').addEventListener('click', (e)=>{ e.preventDefault();
+  const t = load('safe_theme','light') === 'dark' ? 'light' : 'dark';
+  save('safe_theme', t); applyTheme();
+});
+Array.from(document.getElementsByName('theme')).forEach(r=> r.addEventListener('change', ()=>{
+  save('safe_theme', r.value === 'dark' ? 'dark' : 'light'); applyTheme();
+}));
+
+// ---------- NAV & view ----------
+function openPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.style.display='none');
+  const el = document.getElementById('page-' + page);
+  if(el) el.style.display = 'block';
+  document.querySelectorAll('#main-nav a').forEach(a=>a.classList.remove('active'));
+  const nav = document.querySelector('#main-nav a[data-page="'+page+'"]');
+  if(nav) nav.classList.add('active');
+  document.getElementById('page-title').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+  // close dropdown
+  document.getElementById('user-drop').classList.remove('open');
+  // render dependent content
+  if(page==='controle') renderDevices();
+  if(page==='modes') renderModes();
+  if(page==='historique') renderHistoryTable({ type:'all', date:null });
+  if(page==='surveillance') renderAlerts();
+}
+
+document.querySelectorAll('#main-nav a').forEach(a=>{
+  a.addEventListener('click', function(e){ e.preventDefault(); openPage(this.dataset.page); });
+});
+
+// ---------- Init after user auth ----------
+function renderAfterAuth(){
+  const logged = !!localStorage.getItem('safe_logged');
+  // if not logged, still let SPA visible but show top login form (we keep everything client-side)
+  renderProfile(); renderDevices(); renderModes(); renderHistoryTable({type:'all', date:null}); renderAlerts(); applyTheme();
+  renderSummary();
+}
+renderAfterAuth();
+
+// ---------- Small utilities ----------
+function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]); }); }
+
+// simulate occasional alerts (for demo)
+setTimeout(()=>simulateAlert('Mouvement détecté — Salon'), 3000);
+setTimeout(()=>simulateAlert('Mouvement détecté — Entrée'), 9000);
+
+// helper: simulate camera pause/fullscreen
+document.getElementById('cam-pause').addEventListener('click', ()=> {
+  const s = document.getElementById('cam-status');
+  if(s.classList.contains('paused')){ s.classList.remove('paused'); s.textContent='● Normal'; } else { s.classList.add('paused'); s.textContent='⏸️ Pause'; }
+});
+document.getElementById('cam-full').addEventListener('click', ()=> {
+  const el = document.getElementById('main-camera');
+  if(el.requestFullscreen) el.requestFullscreen();
+});
+
+// small keyboard shortcuts
+window.addEventListener('keydown', (e)=> {
+  if(e.key === '1') openPage('dashboard');
+  if(e.key === '2') openPage('surveillance');
+  if(e.key === '3') openPage('controle');
+  if(e.key === '4') openPage('modes');
+  if(e.key === '5') openPage('historique');
+  if(e.key === '6') openPage('profil');
+});
+
+// initial render
+renderAfterAuth();
+
+</script>
 </body>
 </html>
