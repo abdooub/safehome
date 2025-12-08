@@ -558,9 +558,17 @@
         <span id="camera-status" class="status-dot"></span>
     </div>
 
-    <div class="camera-video">
-        <img src="camera.jpg" alt="camera" />
-    </div>
+ <div class="muted" style="margin-bottom:8px">Simulation caméra</div>
+          <div class="camera" id="main-camera" style="height:380px">
+            <div class="tag">En direct</div>
+            <div class="status green" id="cam-status">● Normal</div>
+            <div style="font-size:18px;color:#fff;opacity:0.9">Image simulée / Vidéo</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
+            <button class="btn" id="cam-pause">Pause</button>
+            <button class="btn" id="cam-full">Plein écran</button>
+            <div style="margin-left:auto" class="muted">Dernière alerte : <span id="last-alert">—</span></div>
+          </div>
 
     <button id="btn-camera" class="btn-small" onclick="toggleCamera()">Pause</button>
 
