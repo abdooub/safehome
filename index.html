@@ -5,6 +5,129 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>SafeHome — SPA (Frontend complet)</title>
   <style>
+    /* ---- MODE CARDS ----------- */
+.mode-card {
+    background: #f5faff;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid #d6e6ff;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+.mode-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 10px;
+}
+
+.mode-desc {
+    color: #4a5568;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* ---- BIG BUTTONS ---------- */
+.btn-big {
+    width: 100%;
+    background: #1e40af;
+    color: white;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.btn-big:hover {
+    background: #1e3a8a;
+}
+
+.btn-red {
+    background: #dc2626 !important;
+}
+
+.btn-red:hover {
+    background: #b91c1c !important;
+}
+
+/* ---- QUICK ACTIONS -------- */
+.quick-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 25px 0;
+}
+
+.quick-actions button {
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #e2e8f0;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.quick-actions button:hover {
+    background: #cbd5e1;
+}
+
+/* ---- CAMERA BOX ----------- */
+.camera-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    margin-top: 30px;
+}
+
+.camera-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tag {
+    font-size: 12px;
+    background: #2563eb;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    background: #10b981;
+    border-radius: 50%;
+}
+
+.camera-video img {
+    width: 100%;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+/* ---- SMALL BUTTON --------- */
+.btn-small {
+    padding: 10px 20px;
+    background: #1e40af;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-small:hover {
+    background: #1e3a8a;
+}
+
     :root{
       --bg: #e9f0f6;
       --panel: #ffffff;
