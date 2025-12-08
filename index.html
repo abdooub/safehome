@@ -2,49 +2,207 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>SafeHome — Tableau de bord</title>
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SafeHome — Maquette (SPA)</title>
+  <style>
+    /* ---------- THEME / VARIABLES ---------- */
+    :root{
+      --bg: #e9f0f6;                /* page background (soft blue) */
+      --panel: #ffffff;             /* cards background */
+      --muted: #6b7280;             /* grey text */
+      --surface: #f3f7fb;
+      --primary: #1976d2;           /* main blue */
+      --primary-600: #0f62c9;
+      --accent: #0b9d58;            /* green accent if needed */
+      --shadow-1: 0 10px 30px rgba(13,38,59,0.08);
+      --shadow-2: 0 6px 18px rgba(15,23,42,0.06);
+      --radius-lg: 12px;
+      --radius-md: 10px;
+      --gap: 18px;
+      --max-width: 1180px;
+      --font-sans: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* ---------- RESET & BASE ---------- */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font-sans);
+      background: linear-gradient(180deg, #e9f3fa 0%, var(--bg) 100%);
+      color:#0f1724;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:40px;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    /* ---------- APP WRAPPER ---------- */
+    .wrap{
+      max-width:var(--max-width);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: 240px 1fr;
+      gap:var(--gap);
+      align-items:start;
+    }
+
+    /* ---------- SIDEBAR ---------- */
+    .sidebar{
+      background:var(--panel);
+      border-radius:var(--radius-lg);
+      padding:22px;
+      box-shadow:var(--shadow-1);
+      height:calc(100vh - 80px);
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+    }
+    .brand{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+    .brand .logo{
+      width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),#58a2ff);display:grid;place-items:center;color:white;font-weight:700;font-size:16px;box-shadow:0 6px 18px rgba(25,118,210,0.14)
+    }
+    .brand h1{font-size:14px;margin:0}
+    .menu{flex:1;display:flex;flex-direction:column;gap:6px;padding-top:6px}
+    .menu a{
+      display:flex;align-items:center;gap:12px;padding:12px;border-radius:10px;color:#294150;
+      transition:all .18s;
+    }
+    .menu a .ico{width:34px;height:34;border-radius:8px;background:var(--surface);display:grid;place-items:center;color:var(--muted)}
+    .menu a:hover{background:linear-gradient(90deg, rgba(25,118,210,0.04), rgba(11,157,88,0.02))}
+    .menu a.active{background:linear-gradient(90deg, rgba(25,118,210,0.07), rgba(11,157,88,0.02));box-shadow:var(--shadow-2)}
+    .sidebar .logout{margin-top:auto}
+    .sidebar .logout button{background:transparent;border:0;color:var(--primary);padding:10px;border-radius:8px;cursor:pointer}
+
+    /* ---------- MAIN AREA ---------- */
+    .main{
+      display:flex;
+      flex-direction:column;
+      gap:var(--gap);
+    }
+    header.top{
+      display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-radius:var(--radius-lg);
+      background:linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.98));
+      box-shadow:var(--shadow-2);
+      border:1px solid rgba(20,44,80,0.02);
+    }
+    .page-title{font-size:18px;font-weight:700}
+    .top-right{display:flex;align-items:center;gap:12px}
+    .userbox{display:flex;align-items:center;gap:12px}
+    .avatar{width:40px;height:40px;border-radius:50%;background:#f6fbff;border:2px solid rgba(25,118,210,0.12);display:grid;place-items:center;font-weight:700;color:var(--primary)}
+    .dropdown{position:relative}
+    .dropdown-menu{position:absolute;right:0;top:56px;background:var(--panel);box-shadow:var(--shadow-2);padding:8px;border-radius:10px;min-width:180px;display:none}
+    .dropdown.open .dropdown-menu{display:block}
+    .dropdown-menu a{display:block;padding:8px;border-radius:8px;color:#21343e}
+
+    /* ---------- GRID & CARDS ---------- */
+    .content{
+      display:grid;
+      gap:var(--gap);
+      grid-template-columns: 1fr;
+    }
+    .card{
+      background:var(--panel);
+      border-radius:var(--radius-md);
+      padding:18px;
+      box-shadow:var(--shadow-2);
+      border:1px solid rgba(15,23,42,0.03);
+    }
+
+    /* dashboard top area */
+    .dash-hero{display:flex;gap:18px;align-items:center;justify-content:space-between}
+    .hero-left{flex:1}
+    .welcome{font-size:20px;font-weight:700;margin:0}
+    .subtitle{color:var(--muted);margin-top:6px;margin-bottom:12px}
+    .login-form{max-width:480px}
+    .field{display:flex;flex-direction:column;margin-bottom:10px}
+    .field label{font-size:13px;color:var(--muted);margin-bottom:8px}
+    input[type=text], input[type=password], select{
+      padding:12px;border-radius:8px;border:1px solid #e6eef6;background:linear-gradient(180deg,#fff,#fbfdff);font-size:14px
+    }
+    .btn{padding:10px 14px;border-radius:8px;border:0;cursor:pointer}
+    .btn-primary{background:var(--primary);color:white;box-shadow:0 6px 18px rgba(25,118,210,0.12)}
+    .link-small{font-size:13px;color:var(--muted);display:inline-block;margin-top:8px}
+
+    /* summary cards */
+    .cards-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+    .summary-card{padding:14px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+    .small-num{font-size:20px;font-weight:800;color:var(--primary-600)}
+
+    /* camera card */
+    .camera-wrap{display:grid;grid-template-columns:1fr 300px;gap:12px}
+    .camera{height:220px;border-radius:10px;background:linear-gradient(180deg,#000,#122);color:#fff;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .camera .tag{position:absolute;left:12px;top:12px;background:rgba(0,0,0,0.34);padding:6px 8px;border-radius:8px;font-size:13px}
+    .camera .status{position:absolute;right:12px;top:12px;padding:6px 10px;border-radius:8px;font-weight:600;background:rgba(255,255,255,0.06)}
+    .camera .status.green{color:#00c853;background:rgba(0,200,83,0.08)}
+    .camera .status.red{color:#ff3b30;background:rgba(255,59,48,0.08)}
+
+    /* right small panel */
+    .alerts-list{display:flex;flex-direction:column;gap:8px}
+    .alert-item{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:8px;background:#fff;border:1px solid rgba(15,23,42,0.03)}
+
+    /* control page devices */
+    .devices-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .device{display:flex;align-items:center;justify-content:space-between;padding:12px;border-radius:8px;border:1px solid rgba(15,23,42,0.03);background:linear-gradient(180deg,#fff,#fbfdff)}
+    .device .meta{display:flex;flex-direction:column}
+    .device .meta .name{font-weight:700}
+    .device .meta .small{color:var(--muted);font-size:13px}
+    .switch{width:46px;height:26px;border-radius:20px;background:#e6eef6;position:relative;cursor:pointer;border:1px solid rgba(15,23,42,0.04)}
+    .switch .knob{width:20px;height:20px;border-radius:50%;background:white;position:absolute;top:3px;left:3px;transition:all .18s;box-shadow:0 4px 10px rgba(15,23,42,0.07)}
+    .switch.on{background:linear-gradient(90deg,var(--primary),#58a2ff)}
+    .switch.on .knob{left:23px}
+
+    /* modes */
+    .modes-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .mode-card{padding:20px;border-radius:10px;display:flex;flex-direction:column;gap:12px;min-height:140px}
+    .badge{display:inline-block;padding:6px 10px;border-radius:20px;background:#f1f5f9;color:var(--muted);font-weight:600}
+
+    /* history table */
+    .table{overflow:auto}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:12px;border-bottom:1px solid #f1f5f9;text-align:left;font-size:14px}
+    th{color:var(--muted);font-weight:600;font-size:13px}
+
+    /* profile form */
+    .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .profile-grid .card{padding:16px}
+
+    /* responsive */
+    @media (max-width:980px){
+      .wrap{grid-template-columns: 1fr; padding: 10px}
+      .sidebar{display:none;position:fixed;left:10px;top:10px;z-index:90}
+      .camera-wrap{grid-template-columns:1fr}
+      .cards-row{grid-template-columns:repeat(2,1fr)}
+      .modes-row{grid-template-columns:1fr}
+      .devices-grid{grid-template-columns:1fr}
+    }
+
+    /* small helpers */
+    .muted{color:var(--muted)}
+    .row{display:flex;gap:12px;align-items:center}
+    .space{flex:1}
+    .text-right{text-align:right}
+    .p-sm{padding:8px}
+  </style>
 </head>
 <body>
   <div class="wrap">
+
     <!-- SIDEBAR -->
     <aside class="sidebar">
       <div class="brand">
         <img src="./logo.jpeg" alt="SafeHome Logo" class="logo-img" onerror="this.src='data:image/svg+xml;charset=UTF-8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f0f0f0%22/><text x=%2250%25%22 y=%2255%25%22 font-family=%22Arial%22 font-size=%2240%22 text-anchor=%22middle%22 fill=%22%23999%22>SH</text></svg>'">
         <span>SafeHome</span>
       </div>
-      
-      <nav class="nav">
-        <a href="#" class="nav-link active" data-page="dashboard">
-          <i class="fas fa-home"></i>
-          <span>Tableau de bord</span>
-        </a>
-        <a href="#" class="nav-link" data-page="surveillance">
-          <i class="fas fa-video"></i>
-          <span>Surveillance</span>
-        </a>
-        <a href="#" class="nav-link" data-page="controle">
-          <i class="fas fa-lightbulb"></i>
-          <span>Contrôle</span>
-        </a>
-        <a href="#" class="nav-link" data-page="modes">
-          <i class="fas fa-moon"></i>
-          <span>Modes</span>
-        </a>
-        <a href="#" class="nav-link" data-page="historique">
-          <i class="fas fa-history"></i>
-          <span>Historique</span>
-        </a>
-        <a href="#" class="nav-link" data-page="profil">
-          <i class="fas fa-user"></i>
-          <span>Profil</span>
-        </a>
-        <a href="#" class="nav-link" id="logout">
-          <i class="fas fa-sign-out-alt"></i>
-          <span>Déconnexion</span>
-        </a>
+
+      <nav class="menu" id="main-nav">
+        <a href="#" data-page="dashboard" class="active"><span class="ico">🏠</span><span>Dashboard</span></a>
+        <a href="#" data-page="surveillance"><span class="ico">📷</span><span>Surveillance</span></a>
+        <a href="#" data-page="controle"><span class="ico">💡</span><span>Contrôle</span></a>
+        <a href="#" data-page="modes"><span class="ico">🌙</span><span>Modes</span></a>
+        <a href="#" data-page="historique"><span class="ico">📜</span><span>Historique</span></a>
+        <a href="#" data-page="profil"><span class="ico">👤</span><span>Profil</span></a>
       </nav>
 
       <div class="logout">
@@ -55,246 +213,101 @@
     <!-- MAIN -->
     <main class="main">
       <header class="top">
-        <div class="header-left">
-          <h1>Bonjour, <span>Abdelmounaim</span></h1>
-          <p class="subtitle">Bienvenue sur votre tableau de bord</p>
+        <div>
+          <div class="page-title" id="page-title">Dashboard</div>
+          <div class="muted" style="font-size:13px">Résumé de votre maison</div>
         </div>
-        <div class="header-right">
-          <div class="notification-icon">
-            <i class="fas fa-bell"></i>
-            <span class="notification-badge">3</span>
-          </div>
-          <div class="user-avatar">
-            <img src="https://ui-avatars.com/api/?name=Abdelmounaim&background=4f46e5&color=fff" alt="User">
+        <div class="top-right">
+          <div class="userbox">
+            <div style="text-align:right;font-size:13px;color:var(--muted)">Bonjour, <strong id="user-name">Rania</strong></div>
+            <div class="dropdown" id="user-drop">
+              <div class="avatar" onclick="document.getElementById('user-drop').classList.toggle('open')">R.A</div>
+              <div class="dropdown-menu">
+                <a href="#" data-page="profil">Profil</a>
+                <a href="#" id="settings">Paramètres</a>
+                <a href="#" id="logout">Déconnexion</a>
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
       <section class="content">
-        <!-- Stats Overview -->
-        <div class="overview-grid">
-          <div class="overview-card">
-            <div class="overview-icon">
-              <i class="fas fa-home"></i>
-            </div>
-            <div class="overview-details">
-              <span class="overview-title">Maison</span>
-              <h3>Mode Normal</h3>
-            </div>
-          </div>
-          <div class="overview-card">
-            <div class="overview-icon">
-              <i class="fas fa-lightbulb"></i>
-            </div>
-            <div class="overview-details">
-              <span class="overview-title">Lumière</span>
-              <h3>3 Allumés</h3>
-            </div>
-          </div>
-          <div class="overview-card">
-            <div class="overview-icon">
-              <i class="fas fa-shield-alt"></i>
-            </div>
-            <div class="overview-details">
-              <span class="overview-title">Sécurité</span>
-              <h3>Active</h3>
-            </div>
-          </div>
-        </div>
         <!-- Dashboard PAGE -->
-        <div id="page-dashboard" class="page active">
-          <div class="dashboard-content">
-            <div class="card">
-              <h3>Contrôle des appareils</h3>
-              <div class="device-controls">
-                <div class="device-item">
-                  <div class="device-info">
-                    <i class="fas fa-lightbulb"></i>
-                    <span>Lumière Salon</span>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" id="light-livingroom-switch">
-                    <span class="slider"></span>
-                  </label>
+        <div id="page-dashboard" class="card page">
+          <div class="dash-hero">
+            <div class="hero-left">
+              <h2 class="welcome">Bonjour, <span id="greet-name">Rania</span></h2>
+              <div class="subtitle">Résumé de votre maison</div>
+
+              <div class="login-form card" style="margin-top:12px;padding:14px">
+                <div class="field">
+                  <label>Email / Nom d'utilisateur</label>
+                  <input type="text" placeholder="rania@example.com">
                 </div>
-                <div class="device-item">
-                  <div class="device-info">
-                    <i class="fas fa-tv"></i>
-                    <span>Télévision</span>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" id="tv-switch">
-                    <span class="slider"></span>
-                  </label>
+                <div class="field">
+                  <label>Mot de passe</label>
+                  <input type="password" placeholder="••••••">
                 </div>
-                <div class="device-item">
-                  <div class="device-info">
-                    <i class="fas fa-thermometer-half"></i>
-                    <span>Thermostat</span>
-                  </div>
-                  <label class="switch">
-                    <input type="checkbox" id="thermostat-switch">
-                    <span class="slider"></span>
-                  </label>
+                <div style="display:flex;gap:8px;align-items:center">
+                  <button class="btn btn-primary">Se connecter</button>
+                  <a class="link-small" href="#">Créer un compte</a>
                 </div>
               </div>
             </div>
 
-            <div class="card">
-              <h3>Modes</h3>
-              <div class="mode-options">
-                <div class="mode-option">
-                  <i class="fas fa-moon"></i>
+            <div style="width:340px">
+              <div class="cards-row">
+                <div class="card summary-card">
                   <div>
-                    <h4>Mode Nuit</h4>
-                    <p>Activez le mode nuit pour toutes les pièces</p>
+                    <div class="muted">Appareils allumés</div>
+                    <div class="small-num">3</div>
                   </div>
-                  <label class="switch">
-                    <input type="checkbox" id="night-mode-switch" class="mode-toggle" data-mode="night">
-                    <span class="slider"></span>
-                  </label>
                 </div>
-                <div class="mode-option">
-                  <i class="fas fa-home"></i>
+                <div class="card summary-card">
                   <div>
-                    <h4>Mode Maison</h4>
-                    <p>Activez le mode maison complète</p>
+                    <div class="muted">Portes ouvertes</div>
+                    <div class="small-num" style="color:#ff7a7a">1</div>
                   </div>
-                  <label class="switch">
-                    <input type="checkbox" id="home-mode-switch" class="mode-toggle" data-mode="home">
-                    <span class="slider"></span>
-                  </label>
+                </div>
+                <div class="card summary-card">
+                  <div>
+                    <div class="muted">Alertes aujourd'hui</div>
+                    <div class="small-num" style="color:#ff9b42">2</div>
+                  </div>
+                </div>
+                <div class="card summary-card">
+                  <div>
+                    <div class="muted">Mode actif</div>
+                    <div class="small-num">Aucun</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-              <div class="field">
-                <label>Email / Nom d'utilisateur</label>
-                <input type="text" placeholder="votre@email.com">
-              </div>
-              <div class="field">
-                <label>Mot de passe</label>
-                <input type="password" placeholder="••••••">
-              </div>
-              <div class="form-actions">
-                <button class="btn btn-primary">Se connecter</button>
-                <a href="#" class="forgot-password">Sur perdu son mot de passe ?</a>
-                <a href="#" class="create-account">Créer un compte</a>
-              </div>
-            </div>
-            
-            <div class="stats-grid">
 
-              <div class="stat-card">
-                <div class="stat-icon">
-                  <i class="fas fa-lightbulb"></i>
-                </div>
-                <div class="stat-info">
-                  <div class="stat-value">3</div>
-                  <div class="stat-label">Appareils allumés</div>
-                </div>
+          <div style="margin-top:18px" class="camera-wrap">
+            <div class="card">
+              <h4 style="margin:0 0 8px 0">Caméra / Surveillance rapide</h4>
+              <div class="camera" id="mini-camera">
+                <div class="tag">En direct</div>
+                <div class="status green" id="mini-status">● Normal</div>
+                <div style="opacity:0.12;font-size:120px">📷</div>
               </div>
-              
-              <div class="stat-card">
-                <div class="stat-icon">
-                  <i class="fas fa-door-open"></i>
-                </div>
-                <div class="stat-info">
-                  <div class="stat-value">4</div>
-                  <div class="stat-label">Portes ouvertes</div>
-                </div>
-              </div>
-              
-              <div class="stat-card">
-                <div class="stat-icon">
-                  <i class="fas fa-door-closed"></i>
-                </div>
-                <div class="stat-info">
-                  <div class="stat-value">1</div>
-                  <div class="stat-label">Portes fermées</div>
-                </div>
-              </div>
-              
-              <div class="stat-card">
-                <div class="stat-icon">
-                  <i class="fas fa-bell"></i>
-                </div>
-                <div class="stat-info">
-                  <div class="stat-value">2</div>
-                  <div class="stat-label">Alarme active</div>
-                </div>
-              </div>
+              <div style="display:flex;gap:10px;margin-top:12px">
+                <button class="btn btn-ghost" onclick="openPage('surveillance')">Voir la page Surveillance</button>
+                <button class="btn btn-primary" onclick="openPage('surveillance')">Ouvrir Surveillance</button>
               </div>
             </div>
-          </div>
-          
-          <div class="mode-toggle">
-            <i class="fas fa-moon"></i>
-            <span>Mode nuit</span>
-            <label class="switch">
-              <input type="checkbox">
-              <span class="slider round"></span>
-            </label>
-          </div>
-          
-          <div class="camera-preview card">
-            <div class="camera-header">
-              <h3>Caméra / Surveillance rapide</h3>
-              <div class="camera-status">
-                <span class="status-dot"></span>
-                <span>Ouvert</span>
+
+            <aside class="card">
+              <h4 style="margin:0 0 8px 0">Alertes de mouvement</h4>
+              <div class="alerts-list">
+                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Salon — 12:35</div></div></div>
+                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Entrée — 08:12</div></div></div>
+                <div class="alert-item"><div style="font-size:18px">⚠️</div><div><strong>Mouvement détecté</strong><div class="muted">Garage — 02:11</div></div></div>
               </div>
-            </div>
-            <div class="camera-feed">
-              <div class="camera-placeholder">
-                <i class="fas fa-video"></i>
-                <p>Vidéo en direct</p>
-              </div>
-            </div>
-            <div class="camera-actions">
-              <button class="btn btn-secondary">
-                <i class="fas fa-image"></i>
-                Voir l'image
-              </button>
-              <button class="btn btn-primary">
-                <i class="fas fa-expand"></i>
-                Afficher en plein écran
-              </button>
-            </div>
-          </div>
-          
-          <div class="alerts-container">
-            <h3>Alertes de mouvement</h3>
-            <div class="alerts-list">
-              <div class="alert-item">
-                <div class="alert-icon">
-                  <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <div class="alert-content">
-                  <div class="alert-title">Mouvement détecté</div>
-                  <div class="alert-time">12:35</div>
-                </div>
-              </div>
-              <div class="alert-item">
-                <div class="alert-icon">
-                  <i class="fas fa-door-open"></i>
-                </div>
-                <div class="alert-content">
-                  <div class="alert-title">Mouvement de porte</div>
-                  <div class="alert-time">12:30</div>
-                </div>
-              </div>
-            </div>
-            <div class="mode-option">
-              <div>
-                <h4>Activer Mode Absence</h4>
-                <p>Ferme toutes les portes, active la surveillance</p>
-              </div>
-              <label class="switch">
-                <input type="checkbox">
-                <span class="slider round"></span>
-              </label>
-            </div>
+            </aside>
           </div>
         </div>
 
@@ -494,11 +507,81 @@
     </main>
   </div>
 
-  <!-- Mobile Menu Button (Hidden on desktop) -->
-  <button class="mobile-menu-btn">
-    <i class="fas fa-bars"></i>
-  </button>
+  <script>
+    // ---------- SIMPLE SPA NAV ----------
+    function openPage(page){
+      // hide all pages
+      document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+      // show selected
+      const el = document.getElementById('page-' + page);
+      if(el) el.style.display = 'block';
+      // update nav active
+      document.querySelectorAll('#main-nav a').forEach(a => a.classList.remove('active'));
+      const nav = document.querySelector('#main-nav a[data-page="'+page+'"]');
+      if(nav) nav.classList.add('active');
+      // update title
+      document.getElementById('page-title').textContent = page.charAt(0).toUpperCase() + page.slice(1);
+      // close user dropdown
+      document.getElementById('user-drop').classList.remove('open');
+      // scroll top of main content
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
 
-  <script src="app.js"></script>
+    // nav links
+    document.querySelectorAll('#main-nav a').forEach(a=>{
+      a.addEventListener('click', function(e){
+        e.preventDefault();
+        openPage(this.dataset.page);
+      })
+    });
+    // dropdown menu links
+    document.querySelectorAll('.dropdown-menu a[data-page]').forEach(a=>{
+      a.addEventListener('click', function(e){ e.preventDefault(); openPage(this.dataset.page); });
+    });
+
+    // show initial
+    openPage('dashboard');
+
+    // ---------- SWITCHES ----------
+    function toggleSwitch(el){
+      el.classList.toggle('on');
+    }
+
+    function turnAllOff(){
+      document.querySelectorAll('.switch').forEach(s => s.classList.remove('on'));
+      alert('Tous les appareils ont été éteints (simulation).');
+    }
+
+    // ---------- MODES ----------
+    function toggleMode(mode){
+      if(mode === 'night'){
+        const b = document.getElementById('badge-night');
+        b.textContent = (b.textContent === 'Actif') ? 'Inactif' : 'Actif';
+        b.style.background = (b.textContent === 'Actif') ? 'linear-gradient(90deg,#e6ffef,#dff7ee)' : '#f1f5f9';
+      } else {
+        const b = document.getElementById('badge-away');
+        b.textContent = (b.textContent === 'Actif') ? 'Inactif' : 'Actif';
+        b.style.background = (b.textContent === 'Actif') ? 'linear-gradient(90deg,#e6ffef,#dff7ee)' : '#f1f5f9';
+      }
+    }
+
+    // logout / demo behavior
+    document.getElementById('btn-logout').addEventListener('click', ()=> alert('Déconnexion (simulation)'));
+    document.getElementById('logout').addEventListener('click', (e)=>{ e.preventDefault(); alert('Déconnexion (simulation)'); });
+
+    // small keyboard shortcut for demo: press L to open login modal (not implemented modal, just alert)
+    window.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase() === 'l'){ alert('Login demo (simulation)'); } });
+
+    // optional: responsive improvements (close sidebar on small screens)
+    function initResponsive(){
+      if(window.innerWidth < 980){
+        document.querySelector('.sidebar').style.display = 'none';
+      } else {
+        document.querySelector('.sidebar').style.display = 'flex';
+      }
+    }
+    window.addEventListener('resize', initResponsive);
+    initResponsive();
+  </script>
 </body>
 </html>
