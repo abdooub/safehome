@@ -1,10 +1,22 @@
+console.log('app.js loaded successfully!');
+
 // DOM Elements
-const pages = document.querySelectorAll('.page');
-const navLinks = document.querySelectorAll('.nav-link');
-const toggleSwitches = document.querySelectorAll('.switch input');
-const modeToggles = document.querySelectorAll('.mode-toggle');
-const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-const sidebar = document.querySelector('.sidebar');
+let pages = [];
+let navLinks = [];
+let toggleSwitches = [];
+let modeToggles = [];
+let mobileMenuBtn = null;
+let sidebar = null;
+
+// Initialize DOM elements
+function initElements() {
+  pages = document.querySelectorAll('.page');
+  navLinks = document.querySelectorAll('.nav-link');
+  toggleSwitches = document.querySelectorAll('.switch input');
+  modeToggles = document.querySelectorAll('.mode-toggle');
+  mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+  sidebar = document.querySelector('.sidebar');
+}
 
 // Show page function
 function showPage(pageId) {
@@ -68,76 +80,116 @@ function toggleMobileMenu() {
 }
 
 // Event Listeners
-// Navigation
-function setupNavigation() {
-  // Add click event to all nav links
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const pageId = this.getAttribute('data-page');
-      if (pageId) {
-        showPage(pageId);
-      }
-    });
-  });
-
-  // Toggle switches
-  document.querySelectorAll('.switch input').forEach(switchEl => {
-    switchEl.addEventListener('change', function(e) {
-      const deviceId = this.id.replace('-switch', '');
-      toggleDevice(deviceId, this.checked);
-    });
-  });
-
-  // Mode toggles
-  document.querySelectorAll('.mode-toggle').forEach(toggle => {
-    toggle.addEventListener('click', function(e) {
-      e.preventDefault();
-      const mode = this.getAttribute('data-mode');
-      const isActive = !this.classList.contains('active');
-      toggleMode(mode, isActive);
-    });
+function setupEventListeners() {
+  // Navigation links
+  navLinks.forEach(link => {
+    link.addEventListener('click', handleNavClick);
   });
 
   // Mobile menu button
-  const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
   if (mobileMenuBtn) {
-    mobileMenuBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      document.querySelector('.sidebar').classList.toggle('active');
-    });
+    mobileMenuBtn.addEventListener('click', toggleMobileMenu);
   }
 
-  // Close mobile menu when clicking outside
-  document.addEventListener('click', function(e) {
-    const sidebar = document.querySelector('.sidebar');
-    const menuBtn = document.querySelector('.mobile-menu-btn');
-    if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
-      sidebar.classList.remove('active');
-    }
+  // Close menu when clicking outside
+  document.addEventListener('click', handleClickOutside);
+
+  // Handle window resize
+  window.addEventListener('resize', handleResize);
+
+  // Toggle switches
+  toggleSwitches.forEach(switchEl => {
+    switchEl.addEventListener('change', handleSwitchChange);
   });
 
-  // Handle page load with hash
-  const hash = window.location.hash.substring(1);
-  if (hash) {
-    showPage(hash);
-  } else {
-    showPage('dashboard');
+  // Mode toggles
+  modeToggles.forEach(toggle => {
+    toggle.addEventListener('click', handleModeToggle);
+  });
+}
+
+// Navigation click handler
+function handleNavClick(e) {
+  e.preventDefault();
+  const pageId = this.getAttribute('data-page');
+  if (pageId) {
+    showPage(pageId);
+    // Close mobile menu after navigation
+    if (window.innerWidth < 1024) {
+      sidebar.classList.remove('active');
+    }
   }
 }
 
-// Initialize everything when DOM is loaded
-document.addEventListener('DOMContentLoaded', function() {
-  setupNavigation();
-  
-  // Responsive adjustments
-  function handleResize() {
-    const sidebar = document.querySelector('.sidebar');
-    if (window.innerWidth >= 1024) {
-      sidebar.classList.remove('active');
-    }
+// Handle switch change
+function handleSwitchChange(e) {
+  const deviceId = this.id.replace('-switch', '');
+  toggleDevice(deviceId, this.checked);
+}
+
+// Handle mode toggle
+function handleModeToggle(e) {
+  e.preventDefault();
+  const mode = this.getAttribute('data-mode');
+  const isActive = !this.classList.contains('active');
+  toggleMode(mode, isActive);
+}
+}
+
+// Handle window resize
+function handleResize() {
+  if (window.innerWidth >= 1024) {
+    sidebar.classList.remove('active');
   }
-  
-  window.addEventListener('resize', handleResize);
-  handleResize();
-});
+}
+
+// Handle clicks outside of sidebar
+function handleClickOutside(e) {
+  if (!sidebar.contains(e.target) && !e.target.closest('.mobile-menu-btn')) {
+    sidebar.classList.remove('active');
+  }
+}
+
+// Toggle mobile menu
+function toggleMobileMenu(e) {
+  if (e) e.stopPropagation();
+  sidebar.classList.toggle('active');
+}
+
+// Handle switch change
+function handleSwitchChange(e) {
+  const deviceId = this.id.replace('-switch', '');
+  toggleDevice(deviceId, this.checked);
+}
+
+// Handle mode toggle
+function handleModeToggle(e) {
+  e.preventDefault();
+  const mode = this.getAttribute('data-mode');
+  const isActive = !this.classList.contains('active');
+  toggleMode(mode, isActive);
+}
+
+// Initialize the application
+function init() {
+  try {
+    initElements();
+    setupEventListeners();
+    handleResize();
+    
+    // Show dashboard by default
+    const hash = window.location.hash.substring(1);
+    showPage(hash || 'dashboard');
+    
+    console.log('Application initialized successfully');
+  } catch (error) {
+    console.error('Error initializing application:', error);
+  }
+}
+
+// Start the application when DOM is loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
