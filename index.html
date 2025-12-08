@@ -1232,15 +1232,7 @@ document.getElementById('cam-full').addEventListener('click', ()=> {
   if(el.requestFullscreen) el.requestFullscreen();
 });
 
-// small keyboard shortcuts
-window.addEventListener('keydown', (e)=> {
-  if(e.key === '1') openPage('dashboard');
-  if(e.key === '2') openPage('surveillance');
-  if(e.key === '3') openPage('controle');
-  if(e.key === '4') openPage('modes');
-  if(e.key === '5') openPage('historique');
-  if(e.key === '6') openPage('profil');
-});
+
 
 // initial render
 renderAfterAuth();
