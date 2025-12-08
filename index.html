@@ -30,7 +30,12 @@
       --primary:#4aa3ff;
       color: #e6eef6;
     }
-
+/* Mode active */
+.active-mode {
+    border: 2px solid #1e88e5;
+    background: #e3f2fd;
+    transition: 0.3s;
+}
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -370,9 +375,21 @@
           </div>
         </div>
 
+
       </section>
     </main>
   </div>
+<div id="mode-nuit" class="mode-card">
+    <h3>Mode Nuit</h3>
+    <p>Éteint lumières – Ferme portes – Active caméra</p>
+    <button id="btn-nuit" class="btn-primary">Activer Mode Nuit</button>
+</div>
+
+<div id="mode-absence" class="mode-card">
+    <h3>Mode Absence</h3>
+    <p>Ferme portes – Active surveillance – Éteint lumières</p>
+    <button id="btn-absence" class="btn-primary">Activer Mode Absence</button>
+</div>
 
 <script>
 /*
@@ -383,6 +400,7 @@
       login (local), persistent devices, add device, toggle device, modes, history push,
       profile save, export CSV, filters, theme toggle
 */
+
 
 // ---------- Utilities ----------
 function nowISO(){ return new Date().toISOString(); }
@@ -767,6 +785,119 @@ window.addEventListener('keydown', (e)=> {
 
 // initial render
 renderAfterAuth();
+/*---------------------------------------------------
+   MODE MANAGER – Mode Nuit / Mode Absence
+---------------------------------------------------*/
+
+// keys used for saving mode
+const MODE_KEY = "safehome_active_mode";
+
+// get mode from storage
+function getActiveMode() {
+    return localStorage.getItem(MODE_KEY) || "none";
+}
+
+// save mode
+function setActiveMode(mode) {
+    localStorage.setItem(MODE_KEY, mode);
+    updateModeUI();
+    updateDashboardMode();
+}
+
+// turn OFF all modes
+function resetModes() {
+    localStorage.setItem(MODE_KEY, "none");
+    updateModeUI();
+    updateDashboardMode();
+}
+
+/*---------------------------------------------------
+   UI UPDATING FOR PAGES
+---------------------------------------------------*/
+function updateModeUI() {
+    const active = getActiveMode();
+
+    const nuitCard = document.querySelector("#mode-nuit");
+    const absenceCard = document.querySelector("#mode-absence");
+
+    const nuitBtn = document.querySelector("#btn-nuit");
+    const absenceBtn = document.querySelector("#btn-absence");
+
+    // Reset styles
+    nuitCard.classList.remove("active-mode");
+    absenceCard.classList.remove("active-mode");
+
+    nuitBtn.textContent = "Activer Mode Nuit";
+    absenceBtn.textContent = "Activer Mode Absence";
+
+    // Apply active mode
+    if (active === "nuit") {
+        nuitCard.classList.add("active-mode");
+        nuitBtn.textContent = "Désactiver";
+    }
+    if (active === "absence") {
+        absenceCard.classList.add("active-mode");
+        absenceBtn.textContent = "Désactiver";
+    }
+}
+
+/*---------------------------------------------------
+   MODE ACTIONS (Buttons)
+---------------------------------------------------*/
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btnNuit = document.querySelector("#btn-nuit");
+    const btnAbsence = document.querySelector("#btn-absence");
+
+    if (btnNuit) {
+        btnNuit.addEventListener("click", () => {
+            const active = getActiveMode();
+            if (active === "nuit") {
+                resetModes();
+            } else {
+                setActiveMode("nuit");
+            }
+        });
+    }
+
+    if (btnAbsence) {
+        btnAbsence.addEventListener("click", () => {
+            const active = getActiveMode();
+            if (active === "absence") {
+                resetModes();
+            } else {
+                setActiveMode("absence");
+            }
+        });
+    }
+
+    updateModeUI();
+    updateDashboardMode();
+});
+
+/*---------------------------------------------------
+   DASHBOARD MODE DISPLAY
+---------------------------------------------------*/
+function updateDashboardMode() {
+    const dashMode = document.querySelector("#dashboard-mode");
+
+    if (!dashMode) return;
+
+    const active = getActiveMode();
+
+    if (active === "nuit") {
+        dashMode.textContent = "Mode Nuit";
+        dashMode.style.color = "#1e88e5";
+    }
+    else if (active === "absence") {
+        dashMode.textContent = "Mode Absence";
+        dashMode.style.color = "#1e88e5";
+    }
+    else {
+        dashMode.textContent = "Aucun Mode";
+        dashMode.style.color = "#666";
+    }
+}
 
 </script>
 </body>
